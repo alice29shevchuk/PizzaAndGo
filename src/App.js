@@ -20,7 +20,8 @@ function App() {
           <div className="content__items">
           {
             pizzas.map((obj)=>(
-            <PizzaCard title = {obj.title} price={obj.price} imgUrl={obj.imageUrl} sizes = {obj.sizes}/>
+            // <PizzaCard title = {obj.title} price={obj.price} imgUrl={obj.imageUrl} sizes = {obj.sizes} types={obj.types}/>
+            <PizzaCard {...obj}/>
             ))
           }
           </div>

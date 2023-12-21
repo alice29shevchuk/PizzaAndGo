@@ -1,27 +1,33 @@
 import React from "react";
 import { useEffect,useState } from "react";
 
-function PizzaCard({title,price,imgUrl,sizes}){
+function PizzaCard({title,price,imageUrl,sizes,types}){
     // const [pizzaCount,setPizzaCount] = useState(0);
     // const buttonAddToCart=()=>{
     //     setPizzaCount(pizzaCount+1);
     // }
+    const doughType = ['тонкое','обычное'];
+    const[activeDoughType,setActiveDoughType] = useState(0);
+    const[activeSize,setActiveSize] = useState(0);
     return(
         <div className="pizza-block">
         <img
           className="pizza-block__image"
-          src={imgUrl}
+          src={imageUrl}
           alt="Pizza"
         />
         <h4 className="pizza-block__title">{title}</h4>
         <div className="pizza-block__selector">
           <ul>
-            <li className="active">тонкое</li>
-            <li>традиционное</li>
+            {
+                types.map((type)=>(
+                    <li onClick={()=>setActiveDoughType(type)} className={activeDoughType===type?'active':''}>{type=='0'?doughType[0]:doughType[1]}</li>
+                ))
+            }
           </ul>
           <ul>
-            {sizes.map((value)=>(
-                <li>{value} см.</li>
+            {sizes.map((size,i)=>(
+                <li onClick={()=>setActiveSize(i)} className={activeSize===i?'active':''}>{size} см.</li>
             ))}
           </ul>
         </div>
