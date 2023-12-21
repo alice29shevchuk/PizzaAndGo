@@ -5,19 +5,24 @@ import Header from './components/Header';
 import Categories from './components/Categories'; 
 import Sort from './components/Sort';
 import PizzaCard from './components/PizzaCard';
+import pizzas from './assets/pizzas.json';
 function App() {
   return (
-<div class="wrapper">
+<div className="wrapper">
   <Header></Header>
-      <div class="content">
-        <div class="container">
-          <div class="content__top">
+      <div className="content">
+        <div className="container">
+          <div className="content__top">
             <Categories></Categories>
             <Sort></Sort>
           </div>
-          <h2 class="content__title">Меню</h2>
-          <div class="content__items">
-          <PizzaCard></PizzaCard>
+          <h2 className="content__title">Меню</h2>
+          <div className="content__items">
+          {
+            pizzas.map((obj)=>(
+            <PizzaCard title = {obj.title} price={obj.price} imgUrl={obj.imageUrl} sizes = {obj.sizes}/>
+            ))
+          }
           </div>
         </div>
       </div>
