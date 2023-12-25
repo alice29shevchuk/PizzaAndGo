@@ -5,11 +5,22 @@ import Header from './components/Header';
 import Categories from './components/Categories'; 
 import Sort from './components/Sort';
 import PizzaCard from './components/PizzaCard';
-import pizzas from './assets/pizzas.json';
+// import pizzas from './assets/pizzas.json';
+import React from 'react';
 function App() {
+  const [pizzas,setPizzas] = React.useState([]);
+  React.useEffect(()=>{
+    fetch('https://6589685a324d41715258e658.mockapi.io/pizzas')
+    .then((response)=>{
+      return response.json();
+    })
+    .then((data)=>{
+      setPizzas(data);
+    })
+  },[]);
   return (
-<div className="wrapper">
-  <Header></Header>
+  <div className="wrapper">
+    <Header></Header>
       <div className="content">
         <div className="container">
           <div className="content__top">
@@ -27,7 +38,7 @@ function App() {
           </div>
         </div>
       </div>
-    </div>
+  </div>
   );
 }
 
