@@ -21,13 +21,19 @@ function PizzaCard({title,price,imageUrl,sizes,types}){
           <ul>
             {
                 types.map((type)=>(
-                    <li onClick={()=>setActiveDoughType(type)} className={activeDoughType===type?'active':''}>{type=='0'?doughType[0]:doughType[1]}</li>
+                    <li 
+                    key={type}
+                    onClick={()=>setActiveDoughType(type)} 
+                    className={activeDoughType===type?'active':''}>{type=='0'?doughType[0]:doughType[1]}</li>
                 ))
             }
           </ul>
           <ul>
             {sizes.map((size,i)=>(
-                <li onClick={()=>setActiveSize(i)} className={activeSize===i?'active':''}>{size} см.</li>
+                <li 
+                key={size}
+                onClick={()=>setActiveSize(i)} 
+                className={activeSize===i?'active':''}>{size} см.</li>
             ))}
           </ul>
         </div>
