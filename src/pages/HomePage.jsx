@@ -8,8 +8,15 @@ import Skeleton from '../components/PizzasCard/Skeleton';
 export const HomePage = () => {
     const [pizzas,setPizzas] = React.useState([]);
     const [isLoading,setIsLoading] = React.useState(true);
+
+    const [selectedCategoryId,setSelectedCategoryId]= React.useState(0);
+    const [selectedSortList,setSelectedSortList] = React.useState({
+      name:'популярности 🠕',
+      sortBy:'rating',
+    });
     React.useEffect(()=>{
-      fetch('https://6589685a324d41715258e658.mockapi.io/pizzas')
+      setIsLoading(true);
+      fetch(`https://6589685a324d41715258e658.mockapi.io/pizzas?${selectedCategoryId>0? `category=${selectedCategoryId}`:''}&sortBy=${selectedSortList.sortBy.replace('-','')}&order=${selectedSortList.sortBy.includes('-')?'desc':'asc'}`)
       .then((response)=>{
         return response.json();
       })
@@ -18,12 +25,12 @@ export const HomePage = () => {
         setIsLoading(false);
       })
       window.scrollTo(0,0);
-    },[]);
+    },[selectedCategoryId,selectedSortList]);
   return (
     <div className='container'>
         <div className="content__top">
-            <Categories></Categories>
-            <Sort></Sort>
+            <Categories value = {selectedCategoryId} onClickCategory={(id)=>setSelectedCategoryId(id)}></Categories>
+            <Sort value={selectedSortList} onClickSortList={(i)=>setSelectedSortList(i)}></Sort>
           </div>
           <h2 className="content__title">Меню</h2>
           <div className="content__items">
