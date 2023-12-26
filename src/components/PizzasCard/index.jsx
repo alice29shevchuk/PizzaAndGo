@@ -10,7 +10,8 @@ function PizzaCard({title,price,imageUrl,sizes,types}){
     const[activeDoughType,setActiveDoughType] = useState(0);
     const[activeSize,setActiveSize] = useState(0);
     return(
-        <div className="pizza-block">
+        <div className="pizza-block-wrapper">
+          <div className="pizza-block">
         <img
           className="pizza-block__image"
           src={imageUrl}
@@ -59,6 +60,7 @@ function PizzaCard({title,price,imageUrl,sizes,types}){
           </button>
         </div>
       </div>
+        </div>
     );
 }
 export default PizzaCard;

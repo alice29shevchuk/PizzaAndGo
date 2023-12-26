@@ -13,13 +13,11 @@ function App() {
   <div className="wrapper">
     <Header></Header>
       <div className="content">
-        <div className="container">
           <Routes>
             <Route path='/' element={<HomePage/>}></Route>
             <Route path='/basket' element={<BasketPage/>}></Route>
             <Route path='*' element={<NotFoundPage/>}></Route>
           </Routes>
-        </div>
       </div>
   </div>
   );
