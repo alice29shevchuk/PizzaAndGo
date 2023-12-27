@@ -14,9 +14,10 @@ export const HomePage = ({searchValue}) => {
       name:'популярности 🠕',
       sortBy:'rating',
     });
+    const search = searchValue?`&search=${searchValue}`:'';
     React.useEffect(()=>{
       setIsLoading(true);
-      fetch(`https://6589685a324d41715258e658.mockapi.io/pizzas?${selectedCategoryId>0? `category=${selectedCategoryId}`:''}&sortBy=${selectedSortList.sortBy.replace('-','')}&order=${selectedSortList.sortBy.includes('-')?'desc':'asc'}`)
+      fetch(`https://6589685a324d41715258e658.mockapi.io/pizzas?${selectedCategoryId>0? `category=${selectedCategoryId}`:''}&sortBy=${selectedSortList.sortBy.replace('-','')}&order=${selectedSortList.sortBy.includes('-')?'desc':'asc'}${search}`)
       .then((response)=>{
         return response.json();
       })
@@ -25,7 +26,7 @@ export const HomePage = ({searchValue}) => {
         setIsLoading(false);
       })
       window.scrollTo(0,0);
-    },[selectedCategoryId,selectedSortList]);
+    },[selectedCategoryId,selectedSortList,searchValue]);
   return (
     <div className='container'>
         <div className="content__top">
@@ -37,12 +38,14 @@ export const HomePage = ({searchValue}) => {
           {
             isLoading 
             ? [...new Array(6)].map((_,index)=><Skeleton key={index}/>)
-            :pizzas.filter((obj)=>{
-              if(obj.title.toLowerCase().includes(searchValue.toLowerCase())){
-                return true;
-              }
-              return false;
-            }).map((obj)=><PizzaCard key={obj.id} {...obj}/>)
+            :pizzas
+            // .filter((obj)=>{
+            //   if(obj.title.toLowerCase().includes(searchValue.toLowerCase())){
+            //     return true;
+            //   }
+            //   return false;
+            // })
+            .map((obj)=><PizzaCard key={obj.id} {...obj}/>)
           }
         </div>
     </div>
