@@ -5,7 +5,7 @@ import Sort from '../components/Sort';
 import PizzaCard from '../components/PizzasCard';
 import Skeleton from '../components/PizzasCard/Skeleton';
 
-export const HomePage = () => {
+export const HomePage = ({searchValue}) => {
     const [pizzas,setPizzas] = React.useState([]);
     const [isLoading,setIsLoading] = React.useState(true);
 
@@ -37,7 +37,12 @@ export const HomePage = () => {
           {
             isLoading 
             ? [...new Array(6)].map((_,index)=><Skeleton key={index}/>)
-            :pizzas.map((obj)=><PizzaCard key={obj.id} {...obj}/>)
+            :pizzas.filter((obj)=>{
+              if(obj.title.toLowerCase().includes(searchValue.toLowerCase())){
+                return true;
+              }
+              return false;
+            }).map((obj)=><PizzaCard key={obj.id} {...obj}/>)
           }
         </div>
     </div>

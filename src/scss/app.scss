@@ -97,6 +97,10 @@ body {
         b {
           display: none;
         }
+        span{
+          width: max-content;
+          margin-bottom: 20px;
+        }
       }
     }
 
@@ -119,6 +123,9 @@ body {
         margin-left: auto;
         b {
           display: flex;
+        }
+        span{
+          margin-bottom: 0px;
         }
       }
       flex-direction:column;

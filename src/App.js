@@ -9,12 +9,14 @@ import { NotFoundPage } from './pages/NotFoundPage';
 import {Routes,Route} from 'react-router-dom';
 
 function App() {
+  const[searchValue,setSearchValue] = React.useState('');
+  console.log(searchValue);
   return (
   <div className="wrapper">
-    <Header></Header>
+    <Header searchValue={searchValue} setSearchValue={setSearchValue}></Header>
       <div className="content">
           <Routes>
-            <Route path='/' element={<HomePage/>}></Route>
+            <Route path='/' element={<HomePage searchValue={searchValue}/>}></Route>
             <Route path='/basket' element={<BasketPage/>}></Route>
             <Route path='*' element={<NotFoundPage/>}></Route>
           </Routes>
