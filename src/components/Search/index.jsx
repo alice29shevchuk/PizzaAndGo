@@ -1,6 +1,8 @@
 import React from 'react'
 import styles from '../Search/Search.module.scss';
-export const Search = ({searchValue,setSearchValue}) => {
+import { SearchContext } from '../../App';
+export const Search = () => {
+  const {searchValue,setSearchValue}=React.useContext(SearchContext);
   return (
     <div className={styles.root}>
         <svg className={styles.icon} xmlns="http://www.w3.org/2000/svg" height="512px" id="Layer_1" style={{ enableBackground: 'new 0 0 512 512' }} version="1.1" viewBox="0 0 512 512" width="512px" xmlSpace="preserve">

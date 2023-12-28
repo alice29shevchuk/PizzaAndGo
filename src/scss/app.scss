@@ -65,6 +65,40 @@ body {
       grid-template-columns: repeat(1, 1fr);
     }
   }
+  &__items-notFound{
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-top: -100px;
+      @media (max-width: 1400px) {
+        h1{
+          font-size: 24px;
+        }
+        p{
+          width: max-content;
+          font-size: 18px;
+        }
+      }
+      @media (max-width: 1060px) {
+        h1{
+          font-size: 18px;
+        }
+        p{
+          width: max-content;
+          font-size: 14px;
+        }
+      }
+  
+      @media (max-width: 730px) {
+        h1{
+          font-size: 14px;
+        }
+        p{
+          width: max-content;
+          font-size: 10px;
+        }
+      }
+  }
 
   &__top {
     display: flex;

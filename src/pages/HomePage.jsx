@@ -4,11 +4,11 @@ import Categories from '../components/Categories';
 import Sort from '../components/Sort';
 import PizzaCard from '../components/PizzasCard';
 import Skeleton from '../components/PizzasCard/Skeleton';
-import { NotFoundPage } from './NotFoundPage';
-import { useNavigate } from "react-router-dom";
+import { NotFoundCard } from '../components/NotFoundCard';
+import { SearchContext } from '../App';
 
-export const HomePage = ({searchValue}) => {
-  let navigate = useNavigate();
+export const HomePage = () => {
+    const {searchValue}=React.useContext(SearchContext);
     const [pizzas,setPizzas] = React.useState([]);
     const [isLoading,setIsLoading] = React.useState(true);
     const [selectedCategoryId,setSelectedCategoryId]= React.useState(0);
@@ -19,25 +19,40 @@ export const HomePage = ({searchValue}) => {
     const search = searchValue?`&search=${searchValue}`:'';
     const[currentPage,setCurrentPage] = React.useState(1);
     const[pageCount,setPageCount] = React.useState(1);
+    const [notFound, setNotFound] = React.useState(false); 
+    const pizzasPerPage = 4; // Количество пицц на одной странице
     React.useEffect(()=>{
       setIsLoading(true);
-      fetch(`https://6589685a324d41715258e658.mockapi.io/pizzas?page=${currentPage}&limit=4&${selectedCategoryId>0? `category=${selectedCategoryId}`:''}&sortBy=${selectedSortList.sortBy.replace('-','')}&order=${selectedSortList.sortBy.includes('-')?'desc':'asc'}${search}`)
+      fetch(`https://6589685a324d41715258e658.mockapi.io/pizzas?page=${currentPage}&${selectedCategoryId>0? `category=${selectedCategoryId}`:''}&sortBy=${selectedSortList.sortBy.replace('-','')}&order=${selectedSortList.sortBy.includes('-')?'desc':'asc'}${search}`)
       .then((response)=>{
         if (!response.ok) {
           throw new Error(`Network response was not ok: ${response.statusText}`);
         }
-        return response.json();
+        else{
+          setNotFound(false); 
+          return response.json();
+        }
       })
       .then((data)=>{
-        setPizzas(data);
-        setPageCount(data.length);
+        const startIndex = (currentPage - 1) * pizzasPerPage;
+        const endIndex = startIndex + pizzasPerPage;
+        const slicedPizzas = data.slice(startIndex, endIndex);
+  
+        setPizzas(slicedPizzas);
+        setPageCount(Math.ceil(data.length / pizzasPerPage));
         setIsLoading(false);
+
+        // setPizzas(data);
+        // setPageCount(data.length);
+        // setIsLoading(false);
       })
-      .catch(error => {
-        return navigate("*");
+      .catch((error) => {
+        console.log(error);
+        setNotFound(true); 
+        setIsLoading(false);
       });
       window.scrollTo(0,0);
-    },[selectedCategoryId,selectedSortList,searchValue,currentPage]);
+    },[selectedCategoryId,selectedSortList,searchValue,currentPage,notFound]);
   return (
     <div className='container'>
         <div className="content__top">
@@ -45,10 +60,12 @@ export const HomePage = ({searchValue}) => {
             <Sort value={selectedSortList} onClickSortList={(i)=>setSelectedSortList(i)}></Sort>
           </div>
           <h2 className="content__title">Меню</h2>
-          <div className="content__items">
+          <div className={notFound?'content__items-notFound':'content__items'}>
           {
             isLoading 
             ? [...new Array(6)].map((_,index)=><Skeleton key={index}/>)
+            : notFound
+            ? <NotFoundCard />
             :pizzas
             // .filter((obj)=>{
             //   if(obj.title.toLowerCase().includes(searchValue.toLowerCase())){
@@ -59,7 +76,9 @@ export const HomePage = ({searchValue}) => {
             .map((obj)=><PizzaCard key={obj.id} {...obj}/>)
           }
         </div>
-        <Pagination onChangePage = {(number)=>setCurrentPage(number)} pageCount = {pageCount}></Pagination>
+        {!notFound && (
+        <Pagination onChangePage={(number) => setCurrentPage(number)} pageCount={pageCount}></Pagination>
+      )}
     </div>
   )
 }
