@@ -20,7 +20,8 @@ export const HomePage = () => {
     const[currentPage,setCurrentPage] = React.useState(1);
     const[pageCount,setPageCount] = React.useState(1);
     const [notFound, setNotFound] = React.useState(false); 
-    const pizzasPerPage = 4; // Количество пицц на одной странице
+    const pizzasPerPage = 4;
+    const[selectedPageList,setSelectedPageList] = React.useState(1);
     React.useEffect(()=>{
       setIsLoading(true);
       fetch(`https://6589685a324d41715258e658.mockapi.io/pizzas?page=${currentPage}&${selectedCategoryId>0? `category=${selectedCategoryId}`:''}&sortBy=${selectedSortList.sortBy.replace('-','')}&order=${selectedSortList.sortBy.includes('-')?'desc':'asc'}${search}`)
@@ -48,22 +49,32 @@ export const HomePage = () => {
       })
       .catch((error) => {
         console.log(error);
-        setNotFound(true); 
         setIsLoading(false);
-      });
+        setNotFound(true); 
+      })
+      .finally(setNotFound(false));
       window.scrollTo(0,0);
-    },[selectedCategoryId,selectedSortList,searchValue,currentPage,notFound]);
+    },[selectedCategoryId,selectedSortList,searchValue,currentPage]);
+
+    const handlePageChange = (selectedPage) => {
+      setCurrentPage(selectedPage);
+      setSelectedPageList(selectedPage);
+    };
   return (
     <div className='container'>
         <div className="content__top">
-            <Categories value = {selectedCategoryId} onClickCategory={(id)=>setSelectedCategoryId(id)}></Categories>
+            <Categories value = {selectedCategoryId} onClickCategory={(id)=>{
+              setSelectedCategoryId(id);
+              setCurrentPage(1);
+              setSelectedPageList(1);
+            }}></Categories>
             <Sort value={selectedSortList} onClickSortList={(i)=>setSelectedSortList(i)}></Sort>
           </div>
           <h2 className="content__title">Меню</h2>
           <div className={notFound?'content__items-notFound':'content__items'}>
           {
             isLoading 
-            ? [...new Array(6)].map((_,index)=><Skeleton key={index}/>)
+            ? [...new Array(pizzasPerPage)].map((_,index)=><Skeleton key={index}/>)
             : notFound
             ? <NotFoundCard />
             :pizzas
@@ -77,8 +88,8 @@ export const HomePage = () => {
           }
         </div>
         {!notFound && (
-        <Pagination onChangePage={(number) => setCurrentPage(number)} pageCount={pageCount}></Pagination>
-      )}
+        <Pagination onChangePage={handlePageChange} pageCount={pageCount} selectedPage={selectedPageList}></Pagination>
+        )}
     </div>
   )
 }

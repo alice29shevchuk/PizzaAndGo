@@ -16,7 +16,7 @@ function Header()
       </div>
       </Link>
       {/* <Search searchValue={searchValue} setSearchValue={setSearchValue}></Search> */}
-      <Search></Search>
+      <Search className="header__search"></Search>
       <div className="header__cart">
         <Link to="/basket" className="button button--cart">
           <span>520 грн</span>
