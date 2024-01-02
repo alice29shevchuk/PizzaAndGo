@@ -6,22 +6,31 @@ import PizzaCard from '../components/PizzasCard';
 import Skeleton from '../components/PizzasCard/Skeleton';
 import { NotFoundCard } from '../components/NotFoundCard';
 import { SearchContext } from '../App';
-
+import {useSelector, useDispatch} from 'react-redux';
+import {setCategoryId} from '../redux/slices/filterSlice';
 export const HomePage = () => {
+    const dispatch = useDispatch();
+
     const {searchValue}=React.useContext(SearchContext);
     const [pizzas,setPizzas] = React.useState([]);
     const [isLoading,setIsLoading] = React.useState(true);
-    const [selectedCategoryId,setSelectedCategoryId]= React.useState(0);
-    const [selectedSortList,setSelectedSortList] = React.useState({
-      name:'популярности 🠕',
-      sortBy:'rating',
-    });
+
+    const {selectedCategoryId, selectedSortList} = useSelector((state)=>state.filter);
+    // const [selectedCategoryId,setSelectedCategoryId]= React.useState(0);
+    // const [selectedSortList,setSelectedSortList] = React.useState({
+    //   name:'популярности 🠕',
+    //   sortBy:'rating',
+    // });
+
     const search = searchValue?`&search=${searchValue}`:'';
+
     const[currentPage,setCurrentPage] = React.useState(1);
     const[pageCount,setPageCount] = React.useState(1);
-    const [notFound, setNotFound] = React.useState(false); 
-    const pizzasPerPage = 4;
     const[selectedPageList,setSelectedPageList] = React.useState(1);
+    const pizzasPerPage = 4;
+
+    const [notFound, setNotFound] = React.useState(false); 
+    
     React.useEffect(()=>{
       setIsLoading(true);
       fetch(`https://6589685a324d41715258e658.mockapi.io/pizzas?page=${currentPage}&${selectedCategoryId>0? `category=${selectedCategoryId}`:''}&sortBy=${selectedSortList.sortBy.replace('-','')}&order=${selectedSortList.sortBy.includes('-')?'desc':'asc'}${search}`)
@@ -64,11 +73,13 @@ export const HomePage = () => {
     <div className='container'>
         <div className="content__top">
             <Categories value = {selectedCategoryId} onClickCategory={(id)=>{
-              setSelectedCategoryId(id);
+              // setSelectedCategoryId(id);
+              dispatch(setCategoryId(id));
               setCurrentPage(1);
               setSelectedPageList(1);
             }}></Categories>
-            <Sort value={selectedSortList} onClickSortList={(i)=>setSelectedSortList(i)}></Sort>
+            {/* <Sort value={selectedSortList} onClickSortList={(i)=>setSelectedSortList(i)}></Sort> */}
+            <Sort></Sort>
           </div>
           <h2 className="content__title">Меню</h2>
           <div className={notFound?'content__items-notFound':'content__items'}>
