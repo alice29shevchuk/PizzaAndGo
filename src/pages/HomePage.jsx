@@ -8,6 +8,7 @@ import { NotFoundCard } from '../components/NotFoundCard';
 import { SearchContext } from '../App';
 import {useSelector, useDispatch} from 'react-redux';
 import {setCategoryId} from '../redux/slices/filterSlice';
+import axios from 'axios';
 export const HomePage = () => {
     const dispatch = useDispatch();
 
@@ -30,31 +31,24 @@ export const HomePage = () => {
     const pizzasPerPage = 4;
 
     const [notFound, setNotFound] = React.useState(false); 
-    
+
     React.useEffect(()=>{
       setIsLoading(true);
-      fetch(`https://6589685a324d41715258e658.mockapi.io/pizzas?page=${currentPage}&${selectedCategoryId>0? `category=${selectedCategoryId}`:''}&sortBy=${selectedSortList.sortBy.replace('-','')}&order=${selectedSortList.sortBy.includes('-')?'desc':'asc'}${search}`)
+      axios.get(`https://6589685a324d41715258e658.mockapi.io/pizzas?page=${currentPage}&${selectedCategoryId>0? `category=${selectedCategoryId}`:''}&sortBy=${selectedSortList.sortBy.replace('-','')}&order=${selectedSortList.sortBy.includes('-')?'desc':'asc'}${search}`)
       .then((response)=>{
-        if (!response.ok) {
+        console.log(response.data);
+        if (!response.data) {
           throw new Error(`Network response was not ok: ${response.statusText}`);
         }
         else{
           setNotFound(false); 
-          return response.json();
+          const startIndex = (currentPage - 1) * pizzasPerPage;
+          const endIndex = startIndex + pizzasPerPage;
+          const slicedPizzas = response.data.slice(startIndex, endIndex);
+          setPizzas(slicedPizzas);
+          setPageCount(Math.ceil(response.data.length / pizzasPerPage));
+          setIsLoading(false);
         }
-      })
-      .then((data)=>{
-        const startIndex = (currentPage - 1) * pizzasPerPage;
-        const endIndex = startIndex + pizzasPerPage;
-        const slicedPizzas = data.slice(startIndex, endIndex);
-  
-        setPizzas(slicedPizzas);
-        setPageCount(Math.ceil(data.length / pizzasPerPage));
-        setIsLoading(false);
-
-        // setPizzas(data);
-        // setPageCount(data.length);
-        // setIsLoading(false);
       })
       .catch((error) => {
         console.log(error);
@@ -62,6 +56,36 @@ export const HomePage = () => {
         setNotFound(true); 
       })
       .finally(setNotFound(false));
+
+      // fetch(`https://6589685a324d41715258e658.mockapi.io/pizzas?page=${currentPage}&${selectedCategoryId>0? `category=${selectedCategoryId}`:''}&sortBy=${selectedSortList.sortBy.replace('-','')}&order=${selectedSortList.sortBy.includes('-')?'desc':'asc'}${search}`)
+      // .then((response)=>{
+      //   if (!response.ok) {
+      //     throw new Error(`Network response was not ok: ${response.statusText}`);
+      //   }
+      //   else{
+      //     setNotFound(false); 
+      //     return response.json();
+      //   }
+      // })
+      // .then((data)=>{
+      //   const startIndex = (currentPage - 1) * pizzasPerPage;
+      //   const endIndex = startIndex + pizzasPerPage;
+      //   const slicedPizzas = data.slice(startIndex, endIndex);
+  
+      //   setPizzas(slicedPizzas);
+      //   setPageCount(Math.ceil(data.length / pizzasPerPage));
+      //   setIsLoading(false);
+
+      //   // setPizzas(data);
+      //   // setPageCount(data.length);
+      //   // setIsLoading(false);
+      // })
+      // .catch((error) => {
+      //   console.log(error);
+      //   setIsLoading(false);
+      //   setNotFound(true); 
+      // })
+      // .finally(setNotFound(false));
       window.scrollTo(0,0);
     },[selectedCategoryId,selectedSortList,searchValue,currentPage]);
 
