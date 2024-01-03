@@ -7,7 +7,7 @@ import Skeleton from '../components/PizzasCard/Skeleton';
 import { NotFoundCard } from '../components/NotFoundCard';
 import { SearchContext } from '../App';
 import {useSelector, useDispatch} from 'react-redux';
-import {setCategoryId} from '../redux/slices/filterSlice';
+import {setCategoryId,setCurrentPage,setSelectedPageList} from '../redux/slices/filterSlice';
 import axios from 'axios';
 export const HomePage = () => {
     const dispatch = useDispatch();
@@ -16,7 +16,7 @@ export const HomePage = () => {
     const [pizzas,setPizzas] = React.useState([]);
     const [isLoading,setIsLoading] = React.useState(true);
 
-    const {selectedCategoryId, selectedSortList} = useSelector((state)=>state.filter);
+    const {selectedCategoryId, selectedSortList, currentPage, selectedPageList} = useSelector((state)=>state.filter);
     // const [selectedCategoryId,setSelectedCategoryId]= React.useState(0);
     // const [selectedSortList,setSelectedSortList] = React.useState({
     //   name:'популярности 🠕',
@@ -25,9 +25,12 @@ export const HomePage = () => {
 
     const search = searchValue?`&search=${searchValue}`:'';
 
-    const[currentPage,setCurrentPage] = React.useState(1);
-    const[pageCount,setPageCount] = React.useState(1);
-    const[selectedPageList,setSelectedPageList] = React.useState(1);
+    //
+    //in Redux
+    //
+    // const[currentPage,setCurrentPage] = React.useState(1);
+    // const[selectedPageList,setSelectedPageList] = React.useState(1);
+    const[pageCount,setPageCount] = React.useState(1); 
     const pizzasPerPage = 4;
 
     const [notFound, setNotFound] = React.useState(false); 
@@ -90,17 +93,21 @@ export const HomePage = () => {
     },[selectedCategoryId,selectedSortList,searchValue,currentPage]);
 
     const handlePageChange = (selectedPage) => {
-      setCurrentPage(selectedPage);
-      setSelectedPageList(selectedPage);
+      dispatch(setCurrentPage(selectedPage));
+      dispatch(setSelectedPageList(selectedPage));
+      //setCurrentPage(selectedPage);
+      //setSelectedPageList(selectedPage);
     };
   return (
     <div className='container'>
         <div className="content__top">
             <Categories value = {selectedCategoryId} onClickCategory={(id)=>{
               // setSelectedCategoryId(id);
+              // setCurrentPage(1);
+              // setSelectedPageList(1);
               dispatch(setCategoryId(id));
-              setCurrentPage(1);
-              setSelectedPageList(1);
+              dispatch(setCurrentPage(1));
+              dispatch(setSelectedPageList(1));
             }}></Categories>
             {/* <Sort value={selectedSortList} onClickSortList={(i)=>setSelectedSortList(i)}></Sort> */}
             <Sort></Sort>
