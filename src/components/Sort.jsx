@@ -1,26 +1,26 @@
 import React from 'react';
 import {useSelector,useDispatch} from 'react-redux';
 import {setSelectedSortList} from '../redux/slices/filterSlice';  
+export const list=[
+  {
+    name:'популярности 🠕',sortBy:'rating'
+  },
+  {
+    name:'популярности 🠗',sortBy:'-rating'
+  },
+  {
+    name:'цене 🠕',sortBy:'price'
+  },
+  {
+    name:'цене 🠗',sortBy:'-price'
+  },
+  {
+    name:'алфавиту (А-Я)',sortBy:'title'
+  },
+  {
+    name:'алфавиту (Я-А)',sortBy:'-title'
+  }]
 function Sort(){
-  const list=[
-    {
-      name:'популярности 🠕',sortBy:'rating'
-    },
-    {
-      name:'популярности 🠗',sortBy:'-rating'
-    },
-    {
-      name:'цене 🠕',sortBy:'price'
-    },
-    {
-      name:'цене 🠗',sortBy:'-price'
-    },
-    {
-      name:'алфавиту (А-Я)',sortBy:'title'
-    },
-    {
-      name:'алфавиту (Я-А)',sortBy:'-title'
-    }]
     const dispatch = useDispatch();
     const selectedSortList = useSelector((state)=>state.filter.selectedSortList);
     const [isVisibleList,setIsVisibleList] = React.useState(false);

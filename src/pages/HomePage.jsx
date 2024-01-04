@@ -1,7 +1,7 @@
 import React, { useRef, useState } from 'react';
 import { Pagination } from "../components/Pagination";
 import Categories from '../components/Categories'; 
-import Sort from '../components/Sort';
+import Sort,{list} from '../components/Sort';
 import PizzaCard from '../components/PizzasCard';
 import Skeleton from '../components/PizzasCard/Skeleton';
 import { NotFoundCard } from '../components/NotFoundCard';
@@ -17,7 +17,7 @@ export const HomePage = () => {
     const location = useLocation();
     const [pizzas,setPizzas] = React.useState([]);
     const [isLoading,setIsLoading] = React.useState(true);
-
+    const [isDesc,setIsDesc] = useState(false);
     const {searchValue}=React.useContext(SearchContext);
     const search = searchValue?`&search=${searchValue}`:'';
 
@@ -27,48 +27,60 @@ export const HomePage = () => {
 
     const [notFound, setNotFound] = React.useState(false); 
     const [orderSort,setOrderSort] = useState('');
-    React.useEffect(()=>{
-      if(window.location.search){
+    // React.useEffect(()=>{
+    //   if(window.location.search){
+    //     const params = qs.parse(window.location.search.substring(1));
+
+    //     if (params.category) {
+    //       params.selectedCategoryId = parseInt(params.category, 10);
+    //       delete params.category;
+    //     }
+    //     if (params.page) {
+    //       params.currentPage = parseInt(params.page, 10);
+    //       delete params.page;
+    //     }
+    //     if (params.sort) {
+    //         const selectedSort = list.find(item => item.sortBy === params.sort);
+
+    //         if (selectedSort) {
+    //           params.selectedSortList = { name: selectedSort.name, sortBy: selectedSort.sortBy };
+    //           delete params.sort;
+    //         }
+    //     }
+    //     dispatch(setFilters(params));
+    //   }
+    // },[]);
+    React.useEffect(() => {
+      if (window.location.search) {
         const params = qs.parse(window.location.search.substring(1));
-        console.log(params.sort);
+        const newFilters = {};
+    
         if (params.category) {
-          params.selectedCategoryId = parseInt(params.category, 10);
+          newFilters.selectedCategoryId = parseInt(params.category, 10);
           delete params.category;
         }
+    
         if (params.page) {
-          params.currentPage = parseInt(params.page, 10);
+          newFilters.currentPage = parseInt(params.page, 10);
           delete params.page;
         }
+    
         if (params.sort) {
-          const list=[
-            {
-              name:'популярности 🠕',sortBy:'rating'
-            },
-            {
-              name:'популярности 🠗',sortBy:'-rating'
-            },
-            {
-              name:'цене 🠕',sortBy:'price'
-            },
-            {
-              name:'цене 🠗',sortBy:'-price'
-            },
-            {
-              name:'алфавиту (А-Я)',sortBy:'title'
-            },
-            {
-              name:'алфавиту (Я-А)',sortBy:'-title'
-            }]
-            const selectedSort = list.find(item => item.sortBy === params.sort);
+          const selectedSort = list.find(item => item.sortBy === params.sort);
+    
+          if (selectedSort) {
+            newFilters.selectedSortList = { name: selectedSort.name, sortBy: selectedSort.sortBy };
+            newFilters.selectedSortList.order = orderSort;
 
-            if (selectedSort) {
-              params.selectedSortList = { name: selectedSort.name, sortBy: selectedSort.sortBy };
-              delete params.sort;
-            }
+            delete params.sort;
+            delete params.order;
+          }
         }
-        dispatch(setFilters(params));
+    
+        dispatch(setFilters(newFilters));
       }
-    },[]);
+    }, []);
+    
     React.useEffect(()=>{
       if(selectedCategoryId!==0){
         if(selectedSortList.sortBy.includes('-')){
@@ -91,6 +103,7 @@ export const HomePage = () => {
         localStorage.setItem('filterState', JSON.stringify({ selectedCategoryId, selectedSortList, currentPage, orderSort }));
       }
     },[selectedCategoryId,selectedSortList,searchValue,currentPage,orderSort]);
+
     React.useEffect(() => {
       const savedFilterState = localStorage.getItem('filterState');
       if (savedFilterState) {
