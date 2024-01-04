@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef, useState } from 'react';
 import { Pagination } from "../components/Pagination";
 import Categories from '../components/Categories'; 
 import Sort from '../components/Sort';
@@ -7,11 +7,14 @@ import Skeleton from '../components/PizzasCard/Skeleton';
 import { NotFoundCard } from '../components/NotFoundCard';
 import { SearchContext } from '../App';
 import {useSelector, useDispatch} from 'react-redux';
-import {setCategoryId,setCurrentPage,setSelectedPageList,setPageCount} from '../redux/slices/filterSlice';
+import {setCategoryId,setCurrentPage,setSelectedPageList,setPageCount,setFilters,resetFilters} from '../redux/slices/filterSlice';
 import axios from 'axios';
+import qs from 'qs';
+import {useNavigate,useLocation, Link} from 'react-router-dom';
 export const HomePage = () => {
     const dispatch = useDispatch();
-
+    const navigate = useNavigate();
+    const location = useLocation();
     const [pizzas,setPizzas] = React.useState([]);
     const [isLoading,setIsLoading] = React.useState(true);
 
@@ -23,32 +26,103 @@ export const HomePage = () => {
     const pizzasPerPage = 4;
 
     const [notFound, setNotFound] = React.useState(false); 
-
+    const [orderSort,setOrderSort] = useState('');
     React.useEffect(()=>{
-      setIsLoading(true);
-      axios.get(`https://6589685a324d41715258e658.mockapi.io/pizzas?page=${currentPage}&${selectedCategoryId>0? `category=${selectedCategoryId}`:''}&sortBy=${selectedSortList.sortBy.replace('-','')}&order=${selectedSortList.sortBy.includes('-')?'desc':'asc'}${search}`)
-      .then((response)=>{
-        console.log(response.data);
-        if (!response.data) {
-          throw new Error(`Network response was not ok: ${response.statusText}`);
+      if(window.location.search){
+        const params = qs.parse(window.location.search.substring(1));
+        console.log(params.sort);
+        if (params.category) {
+          params.selectedCategoryId = parseInt(params.category, 10);
+          delete params.category;
+        }
+        if (params.page) {
+          params.currentPage = parseInt(params.page, 10);
+          delete params.page;
+        }
+        if (params.sort) {
+          const list=[
+            {
+              name:'популярности 🠕',sortBy:'rating'
+            },
+            {
+              name:'популярности 🠗',sortBy:'-rating'
+            },
+            {
+              name:'цене 🠕',sortBy:'price'
+            },
+            {
+              name:'цене 🠗',sortBy:'-price'
+            },
+            {
+              name:'алфавиту (А-Я)',sortBy:'title'
+            },
+            {
+              name:'алфавиту (Я-А)',sortBy:'-title'
+            }]
+            const selectedSort = list.find(item => item.sortBy === params.sort);
+
+            if (selectedSort) {
+              params.selectedSortList = { name: selectedSort.name, sortBy: selectedSort.sortBy };
+              delete params.sort;
+            }
+        }
+        dispatch(setFilters(params));
+      }
+    },[]);
+    React.useEffect(()=>{
+      if(selectedCategoryId!==0){
+        if(selectedSortList.sortBy.includes('-')){
+          setOrderSort('desc');
         }
         else{
-          setNotFound(false); 
-          const startIndex = (currentPage - 1) * pizzasPerPage;
-          const endIndex = startIndex + pizzasPerPage;
-          const slicedPizzas = response.data.slice(startIndex, endIndex);
-          setPizzas(slicedPizzas);
-          dispatch(setPageCount(Math.ceil(response.data.length / pizzasPerPage)));
-          setIsLoading(false);
+          setOrderSort('asc');
         }
-      })
-      .catch((error) => {
-        console.log(error);
-        setIsLoading(false);
-        setNotFound(true); 
-      })
-      .finally(setNotFound(false));
-      window.scrollTo(0,0);
+        const queryString = qs.stringify({
+          ...(selectedCategoryId && {category:selectedCategoryId}),
+          ...(selectedSortList.sortBy && 
+          { 
+            sort:selectedSortList.sortBy.replace('-',''),
+            order:orderSort
+          }),
+          page:currentPage,
+          ...(searchValue && { q: searchValue }), 
+        });
+        navigate(`?${queryString}`);
+        localStorage.setItem('filterState', JSON.stringify({ selectedCategoryId, selectedSortList, currentPage, orderSort }));
+      }
+    },[selectedCategoryId,selectedSortList,searchValue,currentPage,orderSort]);
+    React.useEffect(() => {
+      const savedFilterState = localStorage.getItem('filterState');
+      if (savedFilterState) {
+        const { selectedCategoryId, selectedSortList, currentPage, orderSort } = JSON.parse(savedFilterState);
+        dispatch(setFilters({ selectedCategoryId, selectedSortList, currentPage, orderSort }));
+      }
+    }, []);
+    React.useEffect(()=>{
+        setIsLoading(true);
+        axios.get(`https://6589685a324d41715258e658.mockapi.io/pizzas?page=${currentPage}&${selectedCategoryId>0? `category=${selectedCategoryId}`:''}&sortBy=${selectedSortList.sortBy.replace('-','')}&order=${selectedSortList.sortBy.includes('-')?'desc':'asc'}${search}`)
+        .then((response)=>{
+          console.log(response.data);
+          if (!response.data) {
+            throw new Error(`Network response was not ok: ${response.statusText}`);
+          }
+          else{
+            setNotFound(false); 
+            const startIndex = (currentPage - 1) * pizzasPerPage;
+            const endIndex = startIndex + pizzasPerPage;
+            const slicedPizzas = response.data.slice(startIndex, endIndex);
+            setPizzas(slicedPizzas);
+            dispatch(setPageCount(Math.ceil(response.data.length / pizzasPerPage)));
+            setIsLoading(false);
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+          setIsLoading(false);
+          setNotFound(true); 
+        })
+        .finally(setNotFound(false));
+        window.scrollTo(0,0);
     },[selectedCategoryId,selectedSortList,searchValue,currentPage]);
 
     const handlePageChange = (selectedPage) => {
@@ -59,6 +133,12 @@ export const HomePage = () => {
     <div className='container'>
         <div className="content__top">
             <Categories value = {selectedCategoryId} onClickCategory={(id)=>{
+              if(id==0){
+                navigate('/');
+                localStorage.removeItem('filterState');
+                dispatch(resetFilters());
+
+              }
               dispatch(setCategoryId(id));
               dispatch(setCurrentPage(1));
               dispatch(setSelectedPageList(1));

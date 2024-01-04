@@ -1,6 +1,6 @@
 import React from 'react';
 import {useSelector,useDispatch} from 'react-redux';
-import {setSelectedSortList} from '../redux/slices/filterSlice';
+import {setSelectedSortList} from '../redux/slices/filterSlice';  
 function Sort(){
   const list=[
     {
@@ -25,9 +25,8 @@ function Sort(){
     const selectedSortList = useSelector((state)=>state.filter.selectedSortList);
     const [isVisibleList,setIsVisibleList] = React.useState(false);
     
-    const onClickList=(i)=>{
-        // onClickSortList(i);
-        dispatch(setSelectedSortList(i));
+    const onClickList=(obj)=>{
+        dispatch(setSelectedSortList(obj));
         setIsVisibleList(false);
     }
     return(

@@ -28,7 +28,17 @@ const filterSlice = createSlice({
         setPageCount(state,action){
             state.pageCount=action.payload;
         },
+        setFilters(state,action){
+            return { ...state, ...action.payload };
+
+            //state.currentPage = Number(action.payload.currentPage);
+            // state.selectedSortList = action.payload.selectedSortList;
+            //state.selectedCategoryId = Number(action.payload.selectedCategoryId);
+        },
+        resetFilters: (state) => {
+            return initialState;
+          },
     }
 });
-export const {setCategoryId,setSelectedSortList,setCurrentPage,setSelectedPageList,setPageCount}=filterSlice.actions;
+export const {setCategoryId,setSelectedSortList,setCurrentPage,setSelectedPageList,setPageCount,setFilters,resetFilters}=filterSlice.actions;
 export default filterSlice.reducer;

@@ -1,12 +1,23 @@
 import logoPizza from '../assets/images/pizzaLogo.png';
 import { Link } from 'react-router-dom';
 import { Search } from './Search';
+import {useNavigate} from 'react-router-dom';
+import {useDispatch} from 'react-redux';
+import { resetFilters } from '../redux/slices/filterSlice';
+
 function Header()
 {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const handleLogoClick = () => {
+    localStorage.removeItem('filterState');
+    dispatch(resetFilters());
+  };
   return(
     <div className="header">
     <div className="container">
-      <Link to='/'>
+      <Link to='/' onClick={handleLogoClick}>
       <div className="header__logo">
         <img width="88" src={logoPizza} alt="Pizza logo" />
         <div>
