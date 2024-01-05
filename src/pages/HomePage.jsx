@@ -1,6 +1,6 @@
 import React, { useRef, useState } from 'react';
 import { Pagination } from "../components/Pagination";
-import Categories from '../components/Categories'; 
+import Categories,{categories} from '../components/Categories'; 
 import Sort,{list} from '../components/Sort';
 import PizzaCard from '../components/PizzasCard';
 import Skeleton from '../components/PizzasCard/Skeleton';
@@ -14,10 +14,8 @@ import {useNavigate,useLocation, Link} from 'react-router-dom';
 export const HomePage = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const location = useLocation();
     const [pizzas,setPizzas] = React.useState([]);
     const [isLoading,setIsLoading] = React.useState(true);
-    const [isDesc,setIsDesc] = useState(false);
     const {searchValue}=React.useContext(SearchContext);
     const search = searchValue?`&search=${searchValue}`:'';
 
@@ -27,29 +25,6 @@ export const HomePage = () => {
 
     const [notFound, setNotFound] = React.useState(false); 
     const [orderSort,setOrderSort] = useState('');
-    // React.useEffect(()=>{
-    //   if(window.location.search){
-    //     const params = qs.parse(window.location.search.substring(1));
-
-    //     if (params.category) {
-    //       params.selectedCategoryId = parseInt(params.category, 10);
-    //       delete params.category;
-    //     }
-    //     if (params.page) {
-    //       params.currentPage = parseInt(params.page, 10);
-    //       delete params.page;
-    //     }
-    //     if (params.sort) {
-    //         const selectedSort = list.find(item => item.sortBy === params.sort);
-
-    //         if (selectedSort) {
-    //           params.selectedSortList = { name: selectedSort.name, sortBy: selectedSort.sortBy };
-    //           delete params.sort;
-    //         }
-    //     }
-    //     dispatch(setFilters(params));
-    //   }
-    // },[]);
     React.useEffect(() => {
       if (window.location.search) {
         const params = qs.parse(window.location.search.substring(1));
@@ -78,6 +53,7 @@ export const HomePage = () => {
         }
     
         dispatch(setFilters(newFilters));
+        localStorage.setItem('filterState', JSON.stringify(newFilters));
       }
     }, []);
     
@@ -93,7 +69,7 @@ export const HomePage = () => {
           ...(selectedCategoryId && {category:selectedCategoryId}),
           ...(selectedSortList.sortBy && 
           { 
-            sort:selectedSortList.sortBy.replace('-',''),
+            sort:selectedSortList.sortBy,
             order:orderSort
           }),
           page:currentPage,
