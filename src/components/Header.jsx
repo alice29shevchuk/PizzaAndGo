@@ -9,6 +9,7 @@ function Header()
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const {totalPrice,items} = useSelector(state=>state.cart);
+  const totalCount = items.reduce((sum,item)=>sum+item.count,0);
   const handleLogoClick = () => {
     localStorage.removeItem('filterState');
     dispatch(resetFilters());
@@ -60,7 +61,7 @@ function Header()
               strokeLinejoin="round"
             />
           </svg>
-          <span>{items.length}</span>
+          <span>{totalCount}</span>
         </Link>
       </div>
     </div>

@@ -1,14 +1,26 @@
 import React from "react";
-import { useEffect,useState } from "react";
+import { useState } from "react";
+import {useSelector,useDispatch} from 'react-redux';
+import {addProduct} from '../../redux/slices/cartSlice';
+const doughType = ['тонкое','обычное'];
 
-function PizzaCard({title,price,imageUrl,sizes,types}){
-    // const [pizzaCount,setPizzaCount] = useState(0);
-    // const buttonAddToCart=()=>{
-    //     setPizzaCount(pizzaCount+1);
-    // }
-    const doughType = ['тонкое','обычное'];
-    const[activeDoughType,setActiveDoughType] = useState(0);
+function PizzaCard({id,title,price,imageUrl,sizes,types}){
+    const dispatch=useDispatch();
+    const[activeDoughType,setActiveDoughType] = useState(types[0]);
     const[activeSize,setActiveSize] = useState(0);
+    const cartProduct = useSelector(state=>state.cart.items.find((obj)=>obj.id===id));
+    const cartProductCount =cartProduct? cartProduct.count:0;
+    const onClickAdd=()=>{
+      const item={
+        id,
+        title,
+        price,
+        imageUrl,
+        type:doughType[activeDoughType],
+        size:sizes[activeSize]
+      };
+      dispatch(addProduct(item));
+    };
     return(
         <div className="pizza-block-wrapper">
           <div className="pizza-block">
@@ -25,7 +37,8 @@ function PizzaCard({title,price,imageUrl,sizes,types}){
                     <li 
                     key={type}
                     onClick={()=>setActiveDoughType(type)} 
-                    className={activeDoughType===type?'active':''}>{type=='0'?doughType[0]:doughType[1]}</li>
+                    className={activeDoughType===type?'active':''}
+                    >{type=='0'?doughType[0]:doughType[1]}</li>
                 ))
             }
           </ul>
@@ -41,7 +54,7 @@ function PizzaCard({title,price,imageUrl,sizes,types}){
         <div className="pizza-block__bottom">
           <div className="pizza-block__price">от {price} грн.</div>
           {/* <button onClick={buttonAddToCart} className="button button--outline button--add"> */}
-          <button className="button button--outline button--add">
+          <button onClick={onClickAdd} className="button button--outline button--add">
             <svg
               width="12"
               height="12"
@@ -56,7 +69,7 @@ function PizzaCard({title,price,imageUrl,sizes,types}){
             </svg>
             <span>Добавить</span>
             {/* <i>{pizzaCount}</i> */}
-            <i>0</i>
+            {cartProductCount>0 &&<i>{cartProductCount}</i>}
           </button>
         </div>
       </div>
