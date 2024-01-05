@@ -10,12 +10,14 @@ import {useSelector, useDispatch} from 'react-redux';
 import {setCategoryId,setCurrentPage,setSelectedPageList,setPageCount,setFilters,resetFilters} from '../redux/slices/filterSlice';
 import axios from 'axios';
 import qs from 'qs';
-import {useNavigate,useLocation, Link} from 'react-router-dom';
+import {useNavigate} from 'react-router-dom';
 export const HomePage = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
+
     const [pizzas,setPizzas] = React.useState([]);
     const [isLoading,setIsLoading] = React.useState(true);
+
     const {searchValue}=React.useContext(SearchContext);
     const search = searchValue?`&search=${searchValue}`:'';
 
@@ -23,7 +25,8 @@ export const HomePage = () => {
 
     const pizzasPerPage = 4;
 
-    const [notFound, setNotFound] = React.useState(false); 
+    const [notFound, setNotFound] = React.useState(false);
+     
     const [orderSort,setOrderSort] = useState('');
     React.useEffect(() => {
       if (window.location.search) {

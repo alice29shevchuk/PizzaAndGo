@@ -5,9 +5,9 @@ const initialState={
         name:'популярности 🠕',
         sortBy:'rating',
     },
-    currentPage:1,//new
-    selectedPageList:1,//new
-    pageCount:1//new
+    currentPage:1,
+    selectedPageList:1,
+    pageCount:1
 }
 const filterSlice = createSlice({
     name:'filter',

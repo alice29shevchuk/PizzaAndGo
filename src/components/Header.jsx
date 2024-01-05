@@ -2,14 +2,13 @@ import logoPizza from '../assets/images/pizzaLogo.png';
 import { Link } from 'react-router-dom';
 import { Search } from './Search';
 import {useNavigate} from 'react-router-dom';
-import {useDispatch} from 'react-redux';
+import {useDispatch,useSelector} from 'react-redux';
 import { resetFilters } from '../redux/slices/filterSlice';
-
 function Header()
 {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-
+  const {totalPrice,items} = useSelector(state=>state.cart);
   const handleLogoClick = () => {
     localStorage.removeItem('filterState');
     dispatch(resetFilters());
@@ -30,7 +29,7 @@ function Header()
       <Search className="header__search"></Search>
       <div className="header__cart">
         <Link to="/basket" className="button button--cart">
-          <span>520 грн</span>
+          <span>{totalPrice} грн</span>
           <div className="button__delimiter"></div>
           <svg
             width="18"
@@ -61,7 +60,7 @@ function Header()
               strokeLinejoin="round"
             />
           </svg>
-          <span>3</span>
+          <span>{items.length}</span>
         </Link>
       </div>
     </div>

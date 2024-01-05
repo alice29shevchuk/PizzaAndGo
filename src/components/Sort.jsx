@@ -24,13 +24,24 @@ function Sort(){
     const dispatch = useDispatch();
     const selectedSortList = useSelector((state)=>state.filter.selectedSortList);
     const [isVisibleList,setIsVisibleList] = React.useState(false);
-    
+    const sortRef = React.useRef();
     const onClickList=(obj)=>{
         dispatch(setSelectedSortList(obj));
         setIsVisibleList(false);
     }
+    React.useEffect(()=>{
+      const handleSortClickOutside=(e)=>{
+        if(!e.composedPath().includes(sortRef.current)){
+          setIsVisibleList(false);
+        }
+      }
+      document.body.addEventListener('click',handleSortClickOutside);
+      return ()=>{
+        document.body.removeEventListener('click',handleSortClickOutside);
+      }
+    },[]);
     return(
-      <div className="sort">
+      <div ref={sortRef} className="sort">
       <div className="sort__label">
         <svg
           width="10"
