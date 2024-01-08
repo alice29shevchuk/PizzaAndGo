@@ -1,13 +1,13 @@
 import logoPizza from '../assets/images/pizzaLogo.png';
 import { Link } from 'react-router-dom';
 import { Search } from './Search';
-import {useNavigate} from 'react-router-dom';
+import {useLocation} from 'react-router-dom';
 import {useDispatch,useSelector} from 'react-redux';
 import { resetFilters } from '../redux/slices/filterSlice';
 import { cartSelector } from '../redux/slices/cartSlice';
 function Header()
 {
-  const navigate = useNavigate();
+  const location = useLocation();
   const dispatch = useDispatch();
   const {totalPrice,items} = useSelector(cartSelector);
   const totalCount = items.reduce((sum,item)=>sum+item.count,0);
@@ -28,8 +28,10 @@ function Header()
       </div>
       </Link>
       {/* <Search searchValue={searchValue} setSearchValue={setSearchValue}></Search> */}
-      <Search className="header__search"></Search>
+      {location.pathname !== '/basket' && <Search className="header__search" />}
       <div className="header__cart">
+      {
+        location.pathname!=='/basket' && 
         <Link to="/basket" className="button button--cart">
           <span>{totalPrice} грн</span>
           <div className="button__delimiter"></div>
@@ -64,6 +66,7 @@ function Header()
           </svg>
           <span>{totalCount}</span>
         </Link>
+      }
       </div>
     </div>
   </div>

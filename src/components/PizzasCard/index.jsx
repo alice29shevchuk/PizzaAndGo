@@ -73,7 +73,7 @@ function PizzaCard({id,title,price,imageUrl,sizes,types}){
           </button>
         </div>
       </div>
-        </div>
+      </div>
     );
 }
 export default PizzaCard;

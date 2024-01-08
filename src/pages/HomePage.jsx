@@ -10,7 +10,7 @@ import {useSelector, useDispatch} from 'react-redux';
 import {setCategoryId,setCurrentPage,setSelectedPageList,setPageCount,setFilters,resetFilters} from '../redux/slices/filterSlice';
 import axios from 'axios';
 import qs from 'qs';
-import {useNavigate} from 'react-router-dom';
+import {Link, useNavigate} from 'react-router-dom';
 export const HomePage = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -145,7 +145,7 @@ export const HomePage = () => {
             : notFound
             ? <NotFoundCard />
             :pizzas
-            .map((obj)=><PizzaCard key={obj.id} {...obj}/>)
+            .map((obj)=><Link to={`/pizza/${obj.id}`} key={obj.id}><PizzaCard {...obj}/></Link>)
           }
         </div>
         {!notFound && (
