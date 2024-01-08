@@ -4,11 +4,12 @@ import { Search } from './Search';
 import {useNavigate} from 'react-router-dom';
 import {useDispatch,useSelector} from 'react-redux';
 import { resetFilters } from '../redux/slices/filterSlice';
+import { cartSelector } from '../redux/slices/cartSlice';
 function Header()
 {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const {totalPrice,items} = useSelector(state=>state.cart);
+  const {totalPrice,items} = useSelector(cartSelector);
   const totalCount = items.reduce((sum,item)=>sum+item.count,0);
   const handleLogoClick = () => {
     localStorage.removeItem('filterState');
