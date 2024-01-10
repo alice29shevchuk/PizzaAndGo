@@ -8,6 +8,8 @@ import { BasketPage } from './pages/BasketPage';
 import { NotFoundPage } from './pages/NotFoundPage';
 import {Routes,Route} from 'react-router-dom';
 import { PizzaInfo } from './pages/PizzaInfo';
+import { RegisterPage } from './pages/RegisterPage';
+import { LoginPage } from './pages/LoginPage';
 export const SearchContext = React.createContext('');
 function App() {
   const[searchValue,setSearchValue] = React.useState('');
@@ -21,6 +23,8 @@ function App() {
             <Route path='/' element={<HomePage/>}></Route>
             <Route path='/basket' element={<BasketPage/>}></Route>
             <Route path='/pizza/:id' element={<PizzaInfo/>}></Route>
+            <Route path='/registration' element={<RegisterPage/>}></Route>
+            <Route path='/login' element={<LoginPage/>}></Route>
             <Route path='*' element={<NotFoundPage/>}></Route>
           </Routes>
       </div>

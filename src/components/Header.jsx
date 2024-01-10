@@ -5,10 +5,13 @@ import {useLocation} from 'react-router-dom';
 import {useDispatch,useSelector} from 'react-redux';
 import { resetFilters } from '../redux/slices/filterSlice';
 import { cartSelector } from '../redux/slices/cartSlice';
+import {deleteUser} from '../redux/slices/userSlice';
+import {useAuth} from '../hooks/use-auth';
 function Header()
 {
   const location = useLocation();
   const dispatch = useDispatch();
+  const{isAuth,email} = useAuth();
   const {totalPrice,items} = useSelector(cartSelector);
   const totalCount = items.reduce((sum,item)=>sum+item.count,0);
   const handleLogoClick = () => {
@@ -27,7 +30,6 @@ function Header()
         </div>
       </div>
       </Link>
-      {/* <Search searchValue={searchValue} setSearchValue={setSearchValue}></Search> */}
       {location.pathname !== '/basket' && <Search className="header__search" />}
       <div className="header__cart">
       {
@@ -67,6 +69,12 @@ function Header()
           <span>{totalCount}</span>
         </Link>
       }
+      </div>
+      <div>
+        {isAuth 
+        ? (<button onClick={() => dispatch(deleteUser())}>Log out from {email}</button>) 
+        : (<Link to='/login'>Войти</Link>)
+        }
       </div>
     </div>
   </div>
