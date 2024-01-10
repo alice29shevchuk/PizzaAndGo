@@ -11,7 +11,7 @@ function Header()
 {
   const location = useLocation();
   const dispatch = useDispatch();
-  const{isAuth,email} = useAuth();
+  const{isAuth,phone} = useAuth();
   const {totalPrice,items} = useSelector(cartSelector);
   const totalCount = items.reduce((sum,item)=>sum+item.count,0);
   const handleLogoClick = () => {
@@ -72,8 +72,8 @@ function Header()
       </div>
       <div>
         {isAuth 
-        ? (<button onClick={() => dispatch(deleteUser())}>Log out from {email}</button>) 
-        : (<Link to='/login'>Войти</Link>)
+        ? (<button className="button-login" onClick={() => dispatch(deleteUser())}>Log out from {phone}</button>) 
+        : (<Link to='/login' className="button-login">&#x1F464;Войти</Link>)
         }
       </div>
     </div>

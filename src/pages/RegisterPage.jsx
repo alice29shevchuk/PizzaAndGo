@@ -4,10 +4,14 @@ import { Link } from 'react-router-dom'
 
 export const RegisterPage = () => {
   return (
-    <div>
+    <div className="form-container">
         <h1>Регистрация</h1>
         <SignUp></SignUp>
-        <p>Уже есть аккаунт?<Link to='/login'>Войти</Link></p>
+        <p>Уже есть аккаунт?
+        <span className="registration-link">
+            <Link to='/login'>Войти</Link>
+          </span>
+        </p>
     </div>
   )
 }
