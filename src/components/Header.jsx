@@ -24,8 +24,11 @@ function Header()
     const savedUser = localStorage.getItem('user');
     if (savedUser) {
       const parsedUser = JSON.parse(savedUser);
-      dispatch(setUser(parsedUser));
-    }
+      dispatch(setUser({
+        email: parsedUser.email,
+        name: parsedUser.displayName,
+      }));  
+      }
   }, []);
 
   return(
