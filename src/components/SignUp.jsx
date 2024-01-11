@@ -7,15 +7,15 @@ import { getAuth, createUserWithEmailAndPassword,updateProfile} from 'firebase/a
 export const SignUp = () => {
     const dispatch = useDispatch();
     const navigate =useNavigate();
-    const handleRegister=(email, password, name, phoneNum)=>{
-      if (!name || !email || !password || !phoneNum) {
+    const handleRegister=(email, password, name)=>{
+      if (!name || !email || !password ) {
         alert('Пожалуйста, заполните все поля!');
         return;
       }
         const auth = getAuth();
-        createUserWithEmailAndPassword(auth, email, password, name, phoneNum)
+        createUserWithEmailAndPassword(auth, email, password, name)
         .then(({ user }) => {
-          auth.currentUser.phoneNumber=phoneNum;
+          // auth.currentUser.phoneNumber=phoneNum;
           updateProfile(auth.currentUser, {
             displayName: name,
           })
@@ -27,14 +27,28 @@ export const SignUp = () => {
                   id: user.uid,
                   token: user.accessToken,
                   name: user.displayName,
-                  phone: user.phoneNumber,
                 })
               );
+              localStorage.setItem('user', JSON.stringify(user));
               navigate('/');
             })
-            .catch(console.error);
+            .catch((error)=>{
+              alert(error.code);
+            })
+        }).catch((error)=>{
+          if (error.code === 'auth/invalid-credential') {
+            alert('Такого пользователя не существует...', error.message);
+          } 
+          else if (error.code === 'auth/invalid-email') {
+            alert('Не корректный email формат. Пример: example@gmail.com', error.message);
+          } 
+          else if (error.code === 'auth/weak-password') {
+            alert('Слишком слабый пароль.', error.message);
+          }
+          else {
+            alert('Ошибка при авторизации:(', error.message);
+          }
         })
-        .catch(console.error);
     }
   return (
     <div>

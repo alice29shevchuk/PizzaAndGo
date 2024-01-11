@@ -5,19 +5,29 @@ import {useLocation} from 'react-router-dom';
 import {useDispatch,useSelector} from 'react-redux';
 import { resetFilters } from '../redux/slices/filterSlice';
 import { cartSelector } from '../redux/slices/cartSlice';
-import {deleteUser} from '../redux/slices/userSlice';
+import {deleteUser,setUser} from '../redux/slices/userSlice';
 import {useAuth} from '../hooks/use-auth';
+import React from 'react';
+
 function Header()
 {
   const location = useLocation();
   const dispatch = useDispatch();
-  const{isAuth,phone} = useAuth();
+  const{isAuth,name} = useAuth();
   const {totalPrice,items} = useSelector(cartSelector);
   const totalCount = items.reduce((sum,item)=>sum+item.count,0);
   const handleLogoClick = () => {
     localStorage.removeItem('filterState');
     dispatch(resetFilters());
   };
+  React.useEffect(() => {
+    const savedUser = localStorage.getItem('user');
+    if (savedUser) {
+      const parsedUser = JSON.parse(savedUser);
+      dispatch(setUser(parsedUser));
+    }
+  }, []);
+
   return(
     <div className="header">
     <div className="container">
@@ -72,7 +82,9 @@ function Header()
       </div>
       <div>
         {isAuth 
-        ? (<button className="button-login" onClick={() => dispatch(deleteUser())}>Log out from {phone}</button>) 
+        ? (<Link to='/user-profile' className="button-login">
+        {name}
+      </Link>) 
         : (<Link to='/login' className="button-login">&#x1F464;Войти</Link>)
         }
       </div>

@@ -1,12 +1,21 @@
 import {useSelector} from 'react-redux';
 export function useAuth(){
-    const { email,token,id,name,phone} = useSelector((state)=>state.user);
+    const { email,token,id,name} = useSelector((state)=>state.user);
     return{
-        isAuth: !!phone,
+        isAuth: !!name,
         email,
         token,
         id,
         name,
-        phone,
     };
+//     const { email, token, id, name } = useSelector((state) => state.user);
+//     const storedUser = JSON.parse(localStorage.getItem('user'));
+
+//   return {
+//     isAuth: !!name || (storedUser && storedUser.displayName),
+//     email,
+//     token,
+//     id,
+//     name,
+//   };
 }

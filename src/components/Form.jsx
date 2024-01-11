@@ -3,11 +3,10 @@ export const Form = ({title,handleClickButtonForm,isRegistration}) => {
     const [email,setEmail] = React.useState('');
     const [pass,setPass] = React.useState('');
     const [name,setName] = React.useState('');
-    const [phone,setPhone] = React.useState('');
 
     const handleButtonClick = () => {
       if (isRegistration) {
-        handleClickButtonForm(email, pass, name, phone);
+        handleClickButtonForm(email, pass, name);
       } else {
         handleClickButtonForm(email, pass);
       }
@@ -18,7 +17,6 @@ export const Form = ({title,handleClickButtonForm,isRegistration}) => {
         {isRegistration && (
           <>
             <input required type="text" value={name} placeholder='Name' onChange={(e) => setName(e.target.value)} />
-            <input required type="tel" value={phone} placeholder='Phone' onChange={(e) => setPhone(e.target.value)} />
           </>
         )}
         <input required type="email" value={email} placeholder='Email' onChange={(e) => setEmail(e.target.value)} />
