@@ -86,8 +86,8 @@ function Header()
       <div>
         {isAuth 
         ? (<Link to='/user-profile' className="button-login">
-        {name}
-      </Link>) 
+        &#x1F464;{name}
+        </Link>) 
         : (<Link to='/login' className="button-login">&#x1F464;Войти</Link>)
         }
       </div>

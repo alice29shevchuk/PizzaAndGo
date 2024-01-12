@@ -12,7 +12,7 @@ export const UserProfile = () => {
     const [newName, setNewName] = useState(name);
     const [newEmail, setNewEmail] = useState(email);
     const [currentPassword, setCurrentPassword] = useState('');
-    const [newPassword, setNewPassword] = useState('');  // Define newPassword state
+    const [newPassword, setNewPassword] = useState(''); 
 
     React.useEffect(() => {
     const savedUser = localStorage.getItem('user');
@@ -24,58 +24,81 @@ export const UserProfile = () => {
       }));  
     }
     }, [dispatch]);
-    const handleUpdateProfile = async() => {
-    const current = getAuth().currentUser;
-    dispatch(
-      setUser({
-        email: newEmail || email,
-        name: newName || name,
-      })
-    );
-    const updatedUser = {
-        email: newEmail || email,
-        displayName: newName || name,
-    };
-    await updateProfile(current, {
-        displayName: newName || name,
-        email:newEmail || email,
-    });
-    if (newPassword) {
+    const handleUpdateProfile = async () => {
+        setCurrentPassword('');
+        setNewPassword('');
         try {
-          const credential = EmailAuthProvider.credential(email, currentPassword);
-          await reauthenticateWithCredential(current, credential);
-          await updatePassword(current, newPassword);
+          const current = getAuth().currentUser;
+          dispatch(
+            setUser({
+              email: newEmail || email,
+              name: newName || name,
+            })
+          );
+          const updatedUser = {
+            email: newEmail || email,
+            displayName: newName || name,
+          };
+          await updateProfile(current, {
+            displayName: newName || name,
+            email: newEmail || email,
+          });
+      
+          if (newPassword) {
+            try {
+              const credential = EmailAuthProvider.credential(email, currentPassword);
+              await reauthenticateWithCredential(current, credential);
+              await updatePassword(current, newPassword);
+            } catch (error) {      
+              if (error.code === 'auth/invalid-credential') {
+                alert('Такого пользователя не существует...', error.message);
+                return;
+              } else if (error.code === 'auth/invalid-email') {
+                alert('Не корректный формат email. Пример: example@gmail.com', error.message);
+                return;
+              } else if (error.code === 'auth/weak-password') {
+                alert('Слишком слабый пароль.', error.message);
+                return;
+              } else if (error.code === 'auth/user-token-expired') {
+                alert('Срок действия токена пользователя истек...');
+                navigate('/login');
+              } 
+              else if(error.code==='auth/missing-password'){
+                alert('Отсутствует текущий пароль.');
+                return;
+              }
+              else {
+                alert('Ошибка при обновлении пароля:(', error.message);
+              }
+            }
+          }
+      
+          const savedUser = localStorage.getItem('user');
+          if (savedUser) {
+            const parsedUser = JSON.parse(savedUser);
+            parsedUser.email = updatedUser.email;
+            parsedUser.displayName = updatedUser.displayName;
+            localStorage.setItem('user', JSON.stringify(parsedUser));
+          }
+      
+          navigate('/user-profile');
+          setIsEditing(false);
         } catch (error) {
-          console.error('Ошибка при обновлении пароля:', error);
-          if (error.code === 'auth/invalid-credential') {
-            alert('Такого пользователя не существует...', error.message);
-          } 
-          else if (error.code === 'auth/invalid-email') {
-            alert('Не корректный email формат. Пример: example@gmail.com', error.message);
-          } 
-          else if (error.code === 'auth/weak-password') {
-            alert('Слишком слабый пароль.', error.message);
-          }
-          else {
-            alert('Ошибка при авторизации:(', error.message);
-          }
+          console.error('Ошибка при обновлении профиля:', error);
+          alert('Ошибка при обновлении профиля:(');
         }
-      }
-    const savedUser = localStorage.getItem('user');
-      if (savedUser) {
-        const parsedUser = JSON.parse(savedUser);
-        parsedUser.email = updatedUser.email;
-        parsedUser.displayName = updatedUser.displayName;
-        localStorage.setItem('user', JSON.stringify(parsedUser));
-      }  
-    navigate('/user-profile');
-    setIsEditing(false);
-    };
-
+      };
+      
     const handleForgotPassword = async () => {
         try {
+            const current = getAuth().currentUser;
           await sendPasswordResetEmail(getAuth(), email);
           alert('Письмо для восстановления пароля отправлено на вашу почту.');
+            updateProfile(current, {
+            displayName: newName || name,
+          });
+          navigate('/login');
+          handleLogOut();
         } catch (error) {
           console.error('Ошибка при отправке письма для восстановления пароля:', error);
           alert('Ошибка при отправке письма для восстановления пароля.');
@@ -97,7 +120,7 @@ export const UserProfile = () => {
             <strong>Email:</strong> {email}
           </p>
           <p className="profile-info">
-          <strong>Пароль:</strong> ******
+          <strong>Пароль:</strong> *******
         </p>
         </div>
   
@@ -120,6 +143,8 @@ export const UserProfile = () => {
                   type="email"
                   value={newEmail}
                   onChange={(e) => setNewEmail(e.target.value)}
+                  readOnly
+                  title='Обратитесь к администратору, чтоб поменять email'
                 />
               </label>
               <label className="profile-label">

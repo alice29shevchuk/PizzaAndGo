@@ -6,7 +6,7 @@
     align-items: center;
     padding: 20px;
     background-color: #f0f0f0;
-    margin: 0 auto; /* Добавленные стили для центрирования */
+    margin: 0 auto;
   }
   
   .profile-info-container {
@@ -61,4 +61,20 @@
     border: none;
     cursor: pointer;
   }
+.forgot-password-button {
+  // background-color: #007bff;
+  color: #fff; 
+  padding: 10px 15px; 
+  border: none; 
+  border-radius: 5px; 
+  cursor: pointer; 
+  font-size: 14px;
+  color: grey;
+}
+
+.forgot-password-button:hover {
+  background-color: $orange;
+  color: white;
+}
+
   
