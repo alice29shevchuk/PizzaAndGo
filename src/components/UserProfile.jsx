@@ -2,7 +2,7 @@ import React,{useState} from 'react'
 import { useSelector,useDispatch } from 'react-redux';
 import {setUser,deleteUser} from '../redux/slices/userSlice';
 import {useNavigate} from 'react-router-dom';
-import { getAuth,updateProfile,updateEmail,sendEmailVerification} from "firebase/auth";
+import { getAuth,updateProfile, updatePassword, reauthenticateWithCredential, EmailAuthProvider,sendPasswordResetEmail } from "firebase/auth";
 
 export const UserProfile = () => {
     const dispatch = useDispatch();
@@ -11,6 +11,9 @@ export const UserProfile = () => {
     const { name, email } = useSelector((state) => state.user);
     const [newName, setNewName] = useState(name);
     const [newEmail, setNewEmail] = useState(email);
+    const [currentPassword, setCurrentPassword] = useState('');
+    const [newPassword, setNewPassword] = useState('');  // Define newPassword state
+
     React.useEffect(() => {
     const savedUser = localStorage.getItem('user');
     if (savedUser) {
@@ -37,20 +40,27 @@ export const UserProfile = () => {
         displayName: newName || name,
         email:newEmail || email,
     });
-    sendEmailVerification(current)
-   .then(() => {
-      // Email updated successfully
-      if(current.emailVerified==true){
-        console.log('true');
-        // updateEmail(current,newEmail);
-        current.email = newEmail;
-        console.log(current.email);
+    if (newPassword) {
+        try {
+          const credential = EmailAuthProvider.credential(email, currentPassword);
+          await reauthenticateWithCredential(current, credential);
+          await updatePassword(current, newPassword);
+        } catch (error) {
+          console.error('Ошибка при обновлении пароля:', error);
+          if (error.code === 'auth/invalid-credential') {
+            alert('Такого пользователя не существует...', error.message);
+          } 
+          else if (error.code === 'auth/invalid-email') {
+            alert('Не корректный email формат. Пример: example@gmail.com', error.message);
+          } 
+          else if (error.code === 'auth/weak-password') {
+            alert('Слишком слабый пароль.', error.message);
+          }
+          else {
+            alert('Ошибка при авторизации:(', error.message);
+          }
+        }
       }
-   })
-   .catch((error) => {
-      console.error('Error updating email:', error);
-      // Handle the error as needed
-   });
     const savedUser = localStorage.getItem('user');
       if (savedUser) {
         const parsedUser = JSON.parse(savedUser);
@@ -61,6 +71,16 @@ export const UserProfile = () => {
     navigate('/user-profile');
     setIsEditing(false);
     };
+
+    const handleForgotPassword = async () => {
+        try {
+          await sendPasswordResetEmail(getAuth(), email);
+          alert('Письмо для восстановления пароля отправлено на вашу почту.');
+        } catch (error) {
+          console.error('Ошибка при отправке письма для восстановления пароля:', error);
+          alert('Ошибка при отправке письма для восстановления пароля.');
+        }
+      };
     const handleLogOut = ()=>{
     dispatch(deleteUser());
     localStorage.removeItem('user');
@@ -76,6 +96,9 @@ export const UserProfile = () => {
           <p className="profile-info">
             <strong>Email:</strong> {email}
           </p>
+          <p className="profile-info">
+          <strong>Пароль:</strong> ******
+        </p>
         </div>
   
         <div className="buttons-container">
@@ -99,6 +122,27 @@ export const UserProfile = () => {
                   onChange={(e) => setNewEmail(e.target.value)}
                 />
               </label>
+              <label className="profile-label">
+              <strong>Текущий пароль:</strong>
+              <input
+                className="profile-input"
+                type="password"
+                value={currentPassword}
+                onChange={(e) => setCurrentPassword(e.target.value)}
+              />
+            </label>
+            <button className="forgot-password-button" onClick={handleForgotPassword}>
+            Забыли пароль?
+            </button>
+            <label className="profile-label">
+              <strong>Новый пароль:</strong>
+              <input
+                className="profile-input"
+                type="password"
+                value={newPassword}
+                onChange={(e) => setNewPassword(e.target.value)}
+              />
+            </label>
               <button className="profile-button" onClick={handleUpdateProfile}>
                 Save Changes
               </button>
@@ -110,7 +154,6 @@ export const UserProfile = () => {
               </button>
             </div>
           )}
-  
           <button className="logout-button" onClick={handleLogOut}>
             Log out
           </button>

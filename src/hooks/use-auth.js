@@ -8,14 +8,4 @@ export function useAuth(){
         id,
         name,
     };
-//     const { email, token, id, name } = useSelector((state) => state.user);
-//     const storedUser = JSON.parse(localStorage.getItem('user'));
-
-//   return {
-//     isAuth: !!name || (storedUser && storedUser.displayName),
-//     email,
-//     token,
-//     id,
-//     name,
-//   };
 }
