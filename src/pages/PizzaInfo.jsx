@@ -9,6 +9,7 @@ export const PizzaInfo = () => {
             try{
                 const {data} = await axios.get('https://6589685a324d41715258e658.mockapi.io/pizzas/'+id);
                 setPizza(data);
+
             }catch(error){
                 alert('Smth was wrong :(');
             }
@@ -19,18 +20,42 @@ export const PizzaInfo = () => {
         return 'Загрузка...';
     }
     return (
-    <div className="pizza-block-wrapper">
-        <div className="pizza-block">
-            <img
-            className="pizza-block__image"
-            src={pizza.imageUrl}
-            alt="Pizza"
-            />
-            <h4 className="pizza-block__title">{pizza.title}</h4>
-            <div className="pizza-block__bottom">
-                <div className="pizza-block__price">от {pizza.price} грн.</div>
-            </div>
+        <div className="pizza-info">
+        <div>
+        <h2>{pizza.title}</h2>
+          <img src={pizza.imageUrl} alt="Pizza" />
+          <p>{pizza.ingredients.join(', ')}</p>
+          <div>
+            <h5>Соус:</h5>
+            <label>
+              <input type="checkbox" />
+              {pizza.sauce}
+            </label>
+          </div>
+          <div>
+            <h5>Добавить ингредиенты:</h5>
+            {pizza.ingredientsAdd.map((ingredient) => (
+              <div key={ingredient.name}>
+                <label>
+                  <input type="checkbox" />
+                  {`${ingredient.name} (+${ingredient.price} грн)`}
+                </label>
+              </div>
+            ))}
+          </div>
+          <div>
+            <h5>Исключить ингредиенты:</h5>
+            {pizza.ingredientsExcept.map((ingredient) => (
+              <div key={ingredient}>
+                <label>
+                  <input type="checkbox" />
+                  {`${ingredient}`}
+                </label>
+              </div>
+            ))}
+          </div>
+          <div>{pizza.price} грн</div>
         </div>
-    </div>
+      </div>
   )
 }
