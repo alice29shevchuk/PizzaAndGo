@@ -118,7 +118,7 @@ export const BasketPage = () => {
                   strokeLinejoin="round"></path>
               </svg>
 
-              <span>Вернуться назад</span>
+              <span>На Главную</span>
             </Link>
             <div className="button pay-btn">
               <span>Оплатить сейчас</span>

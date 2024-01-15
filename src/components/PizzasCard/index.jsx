@@ -2,6 +2,7 @@ import React from "react";
 import { useState } from "react";
 import {useSelector,useDispatch} from 'react-redux';
 import {addProduct} from '../../redux/slices/cartSlice';
+import {Link} from 'react-router-dom';
 const doughType = ['тонкое','обычное'];
 
 function PizzaCard({id,title,price,imageUrl,sizes,types}){
@@ -10,27 +11,27 @@ function PizzaCard({id,title,price,imageUrl,sizes,types}){
     const[activeSize,setActiveSize] = useState(0);
     const cartProduct = useSelector(state=>state.cart.items.find((obj)=>obj.id===id));
     const cartProductCount =cartProduct? cartProduct.count:0;
-    const onClickAdd=()=>{
-      const item={
-        id,
-        title,
-        price,
-        imageUrl,
-        type:doughType[activeDoughType],
-        size:sizes[activeSize]
-      };
-      dispatch(addProduct(item));
-    };
+    // const onClickAdd=()=>{
+    //   const item={
+    //     id,
+    //     title,
+    //     price,
+    //     imageUrl,
+    //     type:doughType[activeDoughType],
+    //     size:sizes[activeSize]
+    //   };
+    //   dispatch(addProduct(item));
+    // };
     return(
         <div className="pizza-block-wrapper">
           <div className="pizza-block">
-        <img
-          className="pizza-block__image"
-          src={imageUrl}
-          alt="Pizza"
-        />
+            <img
+            className="pizza-block__image"
+            src={imageUrl}
+            alt="Pizza"
+            />
         <h4 className="pizza-block__title">{title}</h4>
-        <div className="pizza-block__selector">
+        {/* <div className="pizza-block__selector">
           <ul>
             {
                 types.map((type)=>(
@@ -50,11 +51,12 @@ function PizzaCard({id,title,price,imageUrl,sizes,types}){
                 className={activeSize===i?'active':''}>{size} см.</li>
             ))}
           </ul>
-        </div>
+        </div> */}
         <div className="pizza-block__bottom">
-          <div className="pizza-block__price">от {price} грн.</div>
-          {/* <button onClick={buttonAddToCart} className="button button--outline button--add"> */}
-          <button onClick={onClickAdd} className="button button--outline button--add">
+          <div className="pizza-block__price">{price} грн</div>
+          <Link to={`/pizza/${id}`}>
+          {/* onClick={onClickAdd} */}
+          <button className="button button--outline button--add">
             <svg
               width="12"
               height="12"
@@ -67,10 +69,10 @@ function PizzaCard({id,title,price,imageUrl,sizes,types}){
                 fill="white"
               />
             </svg>
-            <span>Добавить</span>
-            {/* <i>{pizzaCount}</i> */}
+            <span>Детальнее</span>
             {cartProductCount>0 &&<i>{cartProductCount}</i>}
           </button>
+          </Link>
         </div>
       </div>
       </div>

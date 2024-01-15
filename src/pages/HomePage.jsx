@@ -145,7 +145,7 @@ export const HomePage = () => {
             : notFound
             ? <NotFoundCard />
             :pizzas
-            .map((obj)=><Link to={`/pizza/${obj.id}`} key={obj.id}><PizzaCard {...obj}/></Link>)
+            .map((obj)=><PizzaCard key={obj.id} {...obj}/>)
           }
         </div>
         {!notFound && (
