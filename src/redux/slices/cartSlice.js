@@ -3,13 +3,18 @@ const initialState={
     totalPrice:0,
     items:[],
     selectedIngredients: [],
+    excludedIngredients:[],
+    selectedSauce: ''
 }
 const cartSlice = createSlice({
     name:'cart',
     initialState,
     reducers:{
         addProduct(state, action) {
-            const findItem = state.items.find((obj) => obj.id === action.payload.id && JSON.stringify(obj.selectedIngredients) === JSON.stringify(action.payload.selectedIngredients));
+            const findItem = state.items.find((obj) => obj.id === action.payload.id && 
+            JSON.stringify(obj.selectedIngredients) === JSON.stringify(action.payload.selectedIngredients) && 
+            JSON.stringify(obj.excludedIngredients) === JSON.stringify(action.payload.excludedIngredients)&&
+            obj.selectedSauce === action.payload.selectedSauce);
             
             if (findItem) {
               findItem.count++;
@@ -25,9 +30,12 @@ const cartSlice = createSlice({
             }, 0);
           },
         deleteProduct(state, action) {
-            const { id, selectedIngredients } = action.payload;
+            const { id, selectedIngredients,excludedIngredients,selectedSauce } = action.payload;
             state.items = state.items.filter((obj) => {
-              return !(obj.id === id && JSON.stringify(obj.selectedIngredients) === JSON.stringify(selectedIngredients));
+              return !(obj.id === id && 
+                JSON.stringify(obj.selectedIngredients) === JSON.stringify(selectedIngredients) && 
+                JSON.stringify(obj.excludedIngredients) === JSON.stringify(excludedIngredients) &&
+                obj.selectedSauce === selectedSauce);
             });
           
             state.totalPrice = state.items.reduce((sum, obj) => {
@@ -35,8 +43,11 @@ const cartSlice = createSlice({
             }, 0);
           },
         minusCount(state, action) {
-            const { id, selectedIngredients } = action.payload;
-            const findItem = state.items.find((obj) => obj.id === id && JSON.stringify(obj.selectedIngredients) === JSON.stringify(selectedIngredients));
+            const { id, selectedIngredients,excludedIngredients,selectedSauce } = action.payload;
+            const findItem = state.items.find((obj) => obj.id === id && 
+            JSON.stringify(obj.selectedIngredients) === JSON.stringify(selectedIngredients) && 
+            JSON.stringify(obj.excludedIngredients) === JSON.stringify(excludedIngredients) &&
+            obj.selectedSauce === selectedSauce);
             
             if (findItem && findItem.count > 1) {
               findItem.count--;
@@ -64,8 +75,14 @@ const cartSlice = createSlice({
               existingItem.count += 1;
             }
         },
+        updateExcludedIngredients(state, action) {
+          state.excludedIngredients = action.payload;
+        },
+        updateSelectedSauce: (state, action) => {
+          state.selectedSauce = action.payload;
+        },
     }
 });
 export const cartSelector=(state)=>state.cart;
-export const {addProduct,deleteProduct,minusCount,clearProducts,updateTotalPrice,updateSelectedIngredients,increaseCartItem}=cartSlice.actions;
+export const {addProduct,deleteProduct,minusCount,clearProducts,updateTotalPrice,updateSelectedIngredients,increaseCartItem,updateExcludedIngredients,updateSelectedSauce}=cartSlice.actions;
 export default cartSlice.reducer;

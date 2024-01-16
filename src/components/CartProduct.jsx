@@ -1,24 +1,32 @@
 import React from 'react'
 import {useDispatch,useSelector} from 'react-redux';
 import {addProduct,deleteProduct,minusCount,cartSelector} from '../redux/slices/cartSlice';
-export const CartProduct = ({id,title,type,size,price,count,imageUrl,selectedIngredients}) => {
+export const CartProduct = ({id,title,type,size,price,count,imageUrl,selectedIngredients,excludedIngredients,selectedSauce}) => {
     const dispatch = useDispatch();
     console.log(selectedIngredients);
     const onClickPlus=()=>{
         dispatch(addProduct({
             id,
-            selectedIngredients
+            selectedIngredients,
+            excludedIngredients,
+            selectedSauce
         }))
     }
     const onClickMinus=()=>{
         dispatch(minusCount({
-          id,selectedIngredients
+          id,
+          selectedIngredients,
+          excludedIngredients,
+          selectedSauce
         }));
     }
     const onClickRemove=()=>{
         if(window.confirm('Вы точно хотите удалить товар с корзины?')){
             dispatch(deleteProduct({
-              id,selectedIngredients
+              id,
+              selectedIngredients,
+              excludedIngredients,
+              selectedSauce
             }));
         }
     }
@@ -31,9 +39,17 @@ export const CartProduct = ({id,title,type,size,price,count,imageUrl,selectedIng
         <h3>{title}</h3>
         <p>
           {selectedIngredients.map((ingredient, index) => (
-            <span key={index} style={{display:'block',color:'#8D8D8D',fontSize:16}}>{ingredient}</span>
+            <span key={index} style={{display:'block',color:'#8D8D8D',fontSize:16}}>1x {ingredient}</span>
           ))}
         </p>
+        <p>
+          {excludedIngredients.map((ingredient, index) => (
+            <span key={index} style={{display:'block',color:'#8D8D8D',fontSize:16}}>1x {ingredient}</span>
+          ))}
+        </p>
+        {selectedSauce!=='' && <p style={{display:'block',color:'#8D8D8D',fontSize:16}}>
+          1х {selectedSauce} соус
+        </p>}
       </div>
       <div className="cart__item-count">
         <button

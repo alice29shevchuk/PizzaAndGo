@@ -1,7 +1,7 @@
 import axios from 'axios';
 import React from 'react';
 import {useParams,useNavigate} from 'react-router-dom';
-import {addProduct,cartSelector,updateSelectedIngredients,increaseCartItem} from '../redux/slices/cartSlice';
+import {addProduct,cartSelector,updateSelectedIngredients,updateExcludedIngredients,updateSelectedSauce} from '../redux/slices/cartSlice';
 import {useSelector,useDispatch} from 'react-redux';
 export const PizzaInfo = () => {
     const {id} = useParams();
@@ -9,9 +9,15 @@ export const PizzaInfo = () => {
     const dispatch = useDispatch();
     const [pizza,setPizza] = React.useState();
     const [selectedIngredients, setSelectedIngredients] = React.useState([]);
-    const {totalPrice,selectedIngredients: globalSelectedIngredients} = useSelector(cartSelector);
+    const [excludedIngredients, setExcludedIngredients] = React.useState([]);
+    const selectedSauce = useSelector((state) => state.cart.selectedSauce);   
+    const [isSauceChecked, setIsSauceChecked] = React.useState(false);
+ 
+    const {totalPrice} = useSelector(cartSelector);
     const cartItems = useSelector((state) => state.cart.items);
-
+    React.useEffect(() => {
+      dispatch(updateSelectedSauce(''));
+  }, []);
     React.useEffect(()=>{
         async function fetchPizzas(){
             try{
@@ -36,6 +42,26 @@ export const PizzaInfo = () => {
 
         }
     };
+    const handleExcludeIngredientChange = (ingredient) => {
+      if (excludedIngredients.includes(ingredient)) {
+        setExcludedIngredients((prevIngredients) =>
+          prevIngredients.filter((item) => item !== ingredient)
+        );
+        dispatch(updateExcludedIngredients(excludedIngredients));
+
+      } 
+      else {
+        setExcludedIngredients((prevIngredients) => [...prevIngredients, ingredient]);
+        dispatch(updateExcludedIngredients(excludedIngredients));
+
+      }
+    };
+    const handleSauceChange = () => {
+      setIsSauceChecked(true);
+      const newSelectedSauce = selectedSauce === pizza.sauce ? '' : pizza.sauce;
+      dispatch(updateSelectedSauce(newSelectedSauce));
+    };
+    
     const calculateTotalPrice = () => {
         const ingredientsPrice = selectedIngredients.reduce((total, ingredient) => {
           const selectedIngredient = pizza.ingredientsAdd.find((item) => item.name === ingredient);
@@ -51,6 +77,8 @@ export const PizzaInfo = () => {
           price: calculateTotalPrice(),
           imageUrl: pizza.imageUrl,
           selectedIngredients,
+          excludedIngredients,
+          selectedSauce,
           totalPrice
         };
         dispatch(addProduct(item));
@@ -69,7 +97,7 @@ export const PizzaInfo = () => {
           <div>
             <h5>Соус:</h5>
             <label>
-              <input type="checkbox" />
+              <input type="checkbox" onChange={handleSauceChange} checked={isSauceChecked} />
               {pizza.sauce}
             </label>
           </div>
@@ -90,7 +118,8 @@ export const PizzaInfo = () => {
             {pizza.ingredientsExcept.map((ingredient) => (
               <div key={ingredient}>
                 <label>
-                  <input type="checkbox" />
+                  <input type="checkbox" onChange={() => handleExcludeIngredientChange(ingredient)}
+                  checked={excludedIngredients.includes(ingredient)} />
                   {`${ingredient}`}
                 </label>
               </div>
