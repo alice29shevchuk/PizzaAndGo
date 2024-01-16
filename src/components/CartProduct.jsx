@@ -29,9 +29,11 @@ export const CartProduct = ({id,title,type,size,price,count,imageUrl,selectedIng
       </div>
       <div className="cart__item-info">
         <h3>{title}</h3>
-        {/* <p>
-          {type}, {size} см.
-        </p> */}
+        <p>
+          {selectedIngredients.map((ingredient, index) => (
+            <span key={index} style={{display:'block',color:'#8D8D8D',fontSize:16}}>{ingredient}</span>
+          ))}
+        </p>
       </div>
       <div className="cart__item-count">
         <button

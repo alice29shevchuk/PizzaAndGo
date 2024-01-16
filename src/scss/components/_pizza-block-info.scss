@@ -47,23 +47,23 @@
           }
         }
       }
-  
       & > div:last-child {
-        margin-top: 20px;
-        font-size: 18px;
-        font-weight: bold;
-        max-width: 600px;
+        margin-top: 40px;
         margin: 0 auto;
         padding: 15px;
-        background-color: $orange;
-        color: white;
-        border-radius: 20px;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        float: right;
+        display: flex;
+        justify-content: space-between;
+        
+        p{
+          font-size: 24px;
+          color: $orange;
+          font-family:Verdana, Geneva, Tahoma, sans-serif;
+          font-weight: 300;
+        }
+
       }
       & > div:last-child:hover {
         cursor: pointer;
-        background-color: darken($orange, 8%);
     }
     }
   }

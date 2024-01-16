@@ -17,7 +17,6 @@ export const PizzaInfo = () => {
             try{
                 const {data} = await axios.get('https://6589685a324d41715258e658.mockapi.io/pizzas/'+id);
                 setPizza(data);
-                // setSelectedIngredients(globalSelectedIngredients);
             }catch(error){
                 alert('Smth was wrong :(');
             }
@@ -97,7 +96,8 @@ export const PizzaInfo = () => {
               </div>
             ))}
           </div>
-          <div>{calculateTotalPrice()} грн</div>     
+          <div>
+          <p>Цена: {calculateTotalPrice()} грн</p>  
           <button onClick={handleAddToCart} className="button button--outline button--add">
             <svg
               width="12"
@@ -112,8 +112,9 @@ export const PizzaInfo = () => {
               />
             </svg>
             <span>Добавить</span>
-          </button>          
-        </div>
-      </div>
+          </button>  
+          </div> 
+        </div>       
+    </div>
   )
 }

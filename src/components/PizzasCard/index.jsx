@@ -3,14 +3,17 @@ import { useState } from "react";
 import {useSelector,useDispatch} from 'react-redux';
 import {addProduct} from '../../redux/slices/cartSlice';
 import {Link} from 'react-router-dom';
+import {cartSelector, clearProducts} from '../../redux/slices/cartSlice';
 const doughType = ['тонкое','обычное'];
 
 function PizzaCard({id,title,price,imageUrl,sizes,types}){
     const dispatch=useDispatch();
     const[activeDoughType,setActiveDoughType] = useState(types[0]);
     const[activeSize,setActiveSize] = useState(0);
+    const {items} = useSelector(cartSelector);
+    const totalCount = items.reduce((sum,item)=>sum+item.count,0);
     const cartProduct = useSelector(state=>state.cart.items.find((obj)=>obj.id===id));
-    const cartProductCount =cartProduct? cartProduct.count:0;
+    const cartProductCount =cartProduct? totalCount:0;
     // const onClickAdd=()=>{
     //   const item={
     //     id,
@@ -70,7 +73,8 @@ function PizzaCard({id,title,price,imageUrl,sizes,types}){
               />
             </svg>
             <span>Детальнее</span>
-            {cartProductCount>0 &&<i>{cartProductCount}</i>}
+            {/* {cartProductCount>0 &&<i>{cartProductCount}</i>} */}
+            {cartProductCount>0 && <i>{totalCount}</i>}
           </button>
           </Link>
         </div>
