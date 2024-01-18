@@ -1,18 +1,31 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link,useNavigate } from 'react-router-dom';
 import {useSelector,useDispatch} from 'react-redux';
 import { CartProduct } from '../components/CartProduct';
 import {cartSelector, clearProducts} from '../redux/slices/cartSlice';
 import { CartEmpty } from '../components/CartEmpty';
+import {useAuth} from '../hooks/use-auth';
+
 export const BasketPage = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const[activeSize,setActiveSize] = React.useState(0);
   const {totalPrice,items} = useSelector(cartSelector);
   const totalCount = items.reduce((sum,item)=>sum+item.count,0);
-
+  const{isAuth,name} = useAuth();
   const onClickClear=()=>{
     if(window.confirm('Вы действительно хотите очистить всю корзину?')){
       dispatch(clearProducts());
+    }
+  }
+  const handlePaymentClick=()=>{
+    if (!isAuth) {
+      alert('Пожалуйста, авторизуйтесь перед оплатой.');
+      navigate('/login');
+      return;
+    }
+    else{
+      navigate('/payment');
     }
   }
   if(!totalPrice){
@@ -121,7 +134,7 @@ export const BasketPage = () => {
               <span>На Главную</span>
             </Link>
             <div className="button pay-btn">
-              <span>Оплатить сейчас</span>
+              <span onClick={handlePaymentClick}>Оплатить сейчас</span>
             </div>
           </div>
         </div>

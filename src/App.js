@@ -11,6 +11,7 @@ import { PizzaInfo } from './pages/PizzaInfo';
 import { RegisterPage } from './pages/RegisterPage';
 import { LoginPage } from './pages/LoginPage';
 import { UserProfilePage } from './pages/UserProfilePage';
+import {PaymentPage} from './pages/PaymentPage';
 export const SearchContext = React.createContext('');
 function App() {
   const[searchValue,setSearchValue] = React.useState('');
@@ -27,6 +28,7 @@ function App() {
             <Route path='/registration' element={<RegisterPage/>}></Route>
             <Route path='/login' element={<LoginPage/>}></Route>
             <Route path='/user-profile' element={<UserProfilePage/>}></Route>
+            <Route path="/payment" element={<PaymentPage/>}></Route>
             <Route path='*' element={<NotFoundPage/>}></Route>
           </Routes>
       </div>
