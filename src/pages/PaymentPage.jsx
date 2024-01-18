@@ -2,17 +2,21 @@ import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { setPhoneNumber, setOrder } from '../redux/slices/paymentSlice';
 import { cartSelector } from '../redux/slices/cartSlice';
-
+import PhoneInput from 'react-phone-input-2';
+import 'react-phone-input-2/lib/style.css';
 export const PaymentPage = () => {
   const dispatch = useDispatch();
-  const { name } = useSelector((state) => state.user);
+  const { name,email } = useSelector((state) => state.user);
   const { totalPrice, items } = useSelector(cartSelector);
-  const totalCount = items.reduce((sum, item) => sum + item.count, 0);
-    console.log(items);
+  const [phone, setPhone] = React.useState('');
+  const [comment, setComment] = React.useState('');
+  const [isPhoneValid, setIsPhoneValid] = React.useState(false);
+  const [paymentMethod, setPaymentMethod] = React.useState('cash');
   useEffect(() => {
     const order = {
       name,
-      phoneNumber: '',
+      email,
+      phoneNumber: phone,
       products: items.map((item) => ({
         id: item.id,
         title: item.title,
@@ -20,20 +24,26 @@ export const PaymentPage = () => {
         excludedIngredients:item.excludedIngredients,
         selectedSauce: item.selectedSauce,
         price: item.price,
+        count:item.count
       })),
       totalPrice,
-      comment:''
+      comment:comment,
+      paymentMethod:paymentMethod
     };
     dispatch(setOrder(order));
-  }, []);
+    console.log(order);
 
-  const handlePhoneNumberChange = (event) => {
-    dispatch(setPhoneNumber(event.target.value));
+  }, [phone, comment, items, totalPrice, dispatch, name, email,paymentMethod]);
+  const handlePhoneChange = (value, data, event, formattedValue) => {
+    setIsPhoneValid(value.length==12);
+    setPhone(value);
   };
-
   const handlePayment = () => {
-    // Дополнительная логика обработки оплаты
+    alert(`Оплата методом ${paymentMethod}`);
   };
+  const handlePaymentMethodChange=(event)=>{
+    setPaymentMethod(event.target.value);
+  }
 
   return (
     <div className='container'>
@@ -44,15 +54,40 @@ export const PaymentPage = () => {
         <h4>Ваше имя</h4>
         <input type="text" value={name} readOnly className="payment-input" />
         <br />
+        <h4>Ваш email</h4>
+        <input type="text" value={email} readOnly className="payment-input" />
+        <br />
         <h4>Телефон</h4>
-        <input
-          type="tel"
-          placeholder="Введите номер"
-          minLength={10}
-          onChange={handlePhoneNumberChange}
-          className="payment-input"
-        />
+        <PhoneInput required={true} country={'ua'} onlyCountries={['ua']}value={phone} onChange={(value, data, event, formattedValue) => {
+                handlePhoneChange(value, data, event, formattedValue);
+              }}/>
+        <br />
+        <div className="payment-method">
+              <h4>Выберите способ оплаты</h4>
+              <label>
+                <input
+                  type="radio"
+                  value="card"
+                  checked={paymentMethod === 'card'}
+                  onChange={handlePaymentMethodChange}
+                />
+                Карта
+              </label>
+              <label>
+                <input
+                  type="radio"
+                  value="cash"
+                  checked={paymentMethod === 'cash'}
+                  onChange={handlePaymentMethodChange}
+                />
+                Наличные
+              </label>
+            </div>
+            <br />
+        <h4>Комментарий к заказу</h4>
+        <textarea value={comment} onChange={(e) => setComment(e.target.value)} maxLength={100} className="payment-input-comment"/>
       </div>
+      
       <div className="order-details">
         <h2>Ваш заказ</h2>
         {items.map((item) => (
@@ -82,7 +117,7 @@ export const PaymentPage = () => {
             <strong>Итого к оплате:</strong> {totalPrice} грн
           </p>
         </div>
-        <button onClick={handlePayment} className="payment-button">Оплатить</button>
+        <button onClick={handlePayment} className={`${isPhoneValid ? 'payment-button ' : 'payment-button-disabled'}`} disabled={!isPhoneValid}>Оплатить</button>
       </div>
     </div>
   </div>  

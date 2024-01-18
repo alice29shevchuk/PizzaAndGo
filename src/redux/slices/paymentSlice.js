@@ -1,14 +1,14 @@
 import {createSlice} from '@reduxjs/toolkit';
 const initialState={
     isAuthorized: false,
-    phoneNumber: '',
-    paymentMethod: 'card',
     order: {
         name: '',
+        email:'',
         phoneNumber: '',
         products: [],
         totalPrice: 0,
-        comment:''
+        comment:'',
+        paymentMethod: '',
     },
 }
 const paymentSlice = createSlice({
@@ -17,9 +17,6 @@ const paymentSlice = createSlice({
     reducers:{
         authorizeUser: (state) => {
             state.isAuthorized = true;
-          },
-          setPhoneNumber: (state, action) => {
-            state.phoneNumber = action.payload;
           },
           setPaymentMethod: (state, action) => {
             state.paymentMethod = action.payload;
