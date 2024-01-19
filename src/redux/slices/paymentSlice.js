@@ -2,6 +2,7 @@ import {createSlice} from '@reduxjs/toolkit';
 const initialState={
     isAuthorized: false,
     order: {
+        number:'',
         name: '',
         email:'',
         phoneNumber: '',

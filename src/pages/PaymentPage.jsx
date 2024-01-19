@@ -4,6 +4,8 @@ import { setPhoneNumber, setOrder } from '../redux/slices/paymentSlice';
 import { cartSelector } from '../redux/slices/cartSlice';
 import PhoneInput from 'react-phone-input-2';
 import 'react-phone-input-2/lib/style.css';
+import StripeCheckout from 'react-stripe-checkout';
+
 export const PaymentPage = () => {
   const dispatch = useDispatch();
   const { name,email } = useSelector((state) => state.user);
@@ -12,8 +14,10 @@ export const PaymentPage = () => {
   const [comment, setComment] = React.useState('');
   const [isPhoneValid, setIsPhoneValid] = React.useState(false);
   const [paymentMethod, setPaymentMethod] = React.useState('cash');
+
   useEffect(() => {
     const order = {
+      number:1,
       name,
       email,
       phoneNumber: phone,
@@ -38,8 +42,12 @@ export const PaymentPage = () => {
     setIsPhoneValid(value.length==12);
     setPhone(value);
   };
+  const onToken = (token) => {
+    // Обработка токена от Stripe
+    alert('Платеж успешно обработан!');
+  };
   const handlePayment = () => {
-    alert(`Оплата методом ${paymentMethod}`);
+        alert(`Оплата методом ${paymentMethod}`);
   };
   const handlePaymentMethodChange=(event)=>{
     setPaymentMethod(event.target.value);
@@ -87,7 +95,6 @@ export const PaymentPage = () => {
         <h4>Комментарий к заказу</h4>
         <textarea value={comment} onChange={(e) => setComment(e.target.value)} maxLength={100} className="payment-input-comment"/>
       </div>
-      
       <div className="order-details">
         <h2>Ваш заказ</h2>
         {items.map((item) => (
@@ -117,7 +124,21 @@ export const PaymentPage = () => {
             <strong>Итого к оплате:</strong> {totalPrice} грн
           </p>
         </div>
-        <button onClick={handlePayment} className={`${isPhoneValid ? 'payment-button ' : 'payment-button-disabled'}`} disabled={!isPhoneValid}>Оплатить</button>
+        {paymentMethod === 'card' && (
+              <StripeCheckout
+              className={`${isPhoneValid ? 'payment-button ' : 'payment-button-disabled'}`} disabled={!isPhoneValid}
+                token={onToken}
+                stripeKey="pk_test_51OaFvPBBmu82HAlB4dh6Kc8i9RC4oE0Q4H5SBnWdXKtbH3xnqQpeBoOeiZdLgtjHFePZRctazLqIOCht8oX1jrKO00WqWHsqMu"
+                amount={totalPrice * 100}
+                name="Pizza and Go"
+                description="Оплата за заказ"
+                email={email}
+                currency="UAH"
+              />
+        )}
+        {paymentMethod==='cash' && (
+        <button onClick={handlePayment} className={`${isPhoneValid ? 'payment-button ' : 'payment-button-disabled'}`} disabled={!isPhoneValid}>Оплатить</button> 
+        )}
       </div>
     </div>
   </div>  

@@ -74,6 +74,18 @@
             }
         }
     }
+    /* Добавьте следующие стили в ваш CSS-файл */
+.qrcode-container {
+    margin-top: 20px; /* Настройте отступ сверху, чтобы разделить QR-код от предыдущих элементов */
+    text-align: center; /* Центрируйте QR-код */
+  }
+  
+  /* Дополнительные стили для стилизации QR-кода, если необходимо */
+  .qrcode-container img {
+    max-width: 100%; /* Сделайте QR-код адаптивным по ширине */
+    height: auto;
+  }
+  
 
     .payment-button {
         background-color: $orange;
