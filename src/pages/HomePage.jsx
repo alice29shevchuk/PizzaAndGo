@@ -94,7 +94,6 @@ export const HomePage = () => {
         setIsLoading(true);
         axios.get(`https://6589685a324d41715258e658.mockapi.io/pizzas?page=${currentPage}&${selectedCategoryId>0? `category=${selectedCategoryId}`:''}&sortBy=${selectedSortList.sortBy.replace('-','')}&order=${selectedSortList.sortBy.includes('-')?'desc':'asc'}${search}`)
         .then((response)=>{
-          console.log(response.data);
           if (!response.data) {
             throw new Error(`Network response was not ok: ${response.statusText}`);
           }

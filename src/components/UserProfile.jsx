@@ -8,7 +8,7 @@ export const UserProfile = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const [isEditing, setIsEditing] = useState(false);
-    const { name, email } = useSelector((state) => state.user);
+    const { id, name, email } = useSelector((state) => state.user);
     const [newName, setNewName] = useState(name);
     const [newEmail, setNewEmail] = useState(email);
     const [currentPassword, setCurrentPassword] = useState('');
@@ -19,6 +19,7 @@ export const UserProfile = () => {
     if (savedUser) {
       const parsedUser = JSON.parse(savedUser);
       dispatch(setUser({
+        id:parsedUser.uid,
         email: parsedUser.email,
         name: parsedUser.displayName,
       }));  
@@ -88,7 +89,9 @@ export const UserProfile = () => {
           alert('Ошибка при обновлении профиля:(');
         }
       };
-      
+      const handleOrderHistory=()=>{
+        navigate('/order-history');
+      }
     const handleForgotPassword = async () => {
         try {
             const current = getAuth().currentUser;
@@ -112,6 +115,7 @@ export const UserProfile = () => {
     return (
         <div className="main">
         <div className="profile-info-container">
+          <h1>{id}</h1>
           <h1>Welcome, {name}!</h1>
           <p className="profile-info">
             <strong>Name:</strong> {name}
@@ -121,7 +125,8 @@ export const UserProfile = () => {
           </p>
           <p className="profile-info">
           <strong>Пароль:</strong> *******
-        </p>
+          </p>
+          <button className="button" onClick={handleOrderHistory}>История заказов</button>
         </div>
   
         <div className="buttons-container">

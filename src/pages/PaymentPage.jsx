@@ -1,23 +1,27 @@
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { setPhoneNumber, setOrder } from '../redux/slices/paymentSlice';
+import { setOrder } from '../redux/slices/paymentSlice';
 import { cartSelector } from '../redux/slices/cartSlice';
 import PhoneInput from 'react-phone-input-2';
 import 'react-phone-input-2/lib/style.css';
 import StripeCheckout from 'react-stripe-checkout';
+import {useNavigate} from 'react-router-dom';
+import { v4 as uuidv4 } from 'uuid';
 
 export const PaymentPage = () => {
+  const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { name,email } = useSelector((state) => state.user);
+  const {id,name,email } = useSelector((state) => state.user);
   const { totalPrice, items } = useSelector(cartSelector);
   const [phone, setPhone] = React.useState('');
   const [comment, setComment] = React.useState('');
   const [isPhoneValid, setIsPhoneValid] = React.useState(false);
   const [paymentMethod, setPaymentMethod] = React.useState('cash');
-
+  const [orderNumber, setOrderNumber] = React.useState('');
   useEffect(() => {
     const order = {
-      number:1,
+      number:orderNumber,
+      id,
       name,
       email,
       phoneNumber: phone,
@@ -32,33 +36,39 @@ export const PaymentPage = () => {
       })),
       totalPrice,
       comment:comment,
-      paymentMethod:paymentMethod
+      paymentMethod:paymentMethod,
+      orderData:new Date().toISOString(),
     };
     dispatch(setOrder(order));
     console.log(order);
-
-  }, [phone, comment, items, totalPrice, dispatch, name, email,paymentMethod]);
+  }, [phone, comment, items, totalPrice, dispatch, name, email,paymentMethod,id]);
   const handlePhoneChange = (value, data, event, formattedValue) => {
     setIsPhoneValid(value.length==12);
     setPhone(value);
   };
   const onToken = (token) => {
-    // Обработка токена от Stripe
     alert('Платеж успешно обработан!');
+    navigate('/order');
   };
   const handlePayment = () => {
-        alert(`Оплата методом ${paymentMethod}`);
+    // alert(`Оплата методом ${paymentMethod}`);
+    navigate('/order');
   };
   const handlePaymentMethodChange=(event)=>{
     setPaymentMethod(event.target.value);
   }
-
+  useEffect(() => {
+    const generatedOrderNumber = uuidv4();
+    setOrderNumber(generatedOrderNumber);
+  }, []);
   return (
     <div className='container'>
     <div className="payment-container">
     <h1>Оплата</h1>
     <div className="payment-details">
       <div className="user-details">
+        <h1>Id</h1>
+        <input type="text" value={id} readOnly/>
         <h4>Ваше имя</h4>
         <input type="text" value={name} readOnly className="payment-input" />
         <br />
@@ -126,8 +136,9 @@ export const PaymentPage = () => {
         </div>
         {paymentMethod === 'card' && (
               <StripeCheckout
-              className={`${isPhoneValid ? 'payment-button ' : 'payment-button-disabled'}`} disabled={!isPhoneValid}
                 token={onToken}
+                className={`${isPhoneValid ? 'payment-button ' : 'payment-button-disabled'}`} disabled={!isPhoneValid}
+
                 stripeKey="pk_test_51OaFvPBBmu82HAlB4dh6Kc8i9RC4oE0Q4H5SBnWdXKtbH3xnqQpeBoOeiZdLgtjHFePZRctazLqIOCht8oX1jrKO00WqWHsqMu"
                 amount={totalPrice * 100}
                 name="Pizza and Go"

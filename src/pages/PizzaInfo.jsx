@@ -12,9 +12,7 @@ export const PizzaInfo = () => {
     const [excludedIngredients, setExcludedIngredients] = React.useState([]);
     const selectedSauce = useSelector((state) => state.cart.selectedSauce);   
     const [isSauceChecked, setIsSauceChecked] = React.useState(false);
- 
-    const {totalPrice} = useSelector(cartSelector);
-    const cartItems = useSelector((state) => state.cart.items);
+    const {totalPrice,items} = useSelector(cartSelector);
     React.useEffect(() => {
       dispatch(updateSelectedSauce(''));
   }, []);
@@ -67,7 +65,6 @@ export const PizzaInfo = () => {
           const selectedIngredient = pizza.ingredientsAdd.find((item) => item.name === ingredient);
           return total + (selectedIngredient ? selectedIngredient.price : 0);
         }, 0);
-        console.log(pizza.price + ingredientsPrice);
         return pizza.price + ingredientsPrice;
       };
       const handleAddToCart = () => {
@@ -81,7 +78,9 @@ export const PizzaInfo = () => {
           selectedSauce,
           totalPrice
         };
+
         dispatch(addProduct(item));
+        localStorage.setItem('cart',JSON.stringify([...items, item]));
         navigate('/basket');
     };
     

@@ -81,8 +81,11 @@ const cartSlice = createSlice({
         updateSelectedSauce: (state, action) => {
           state.selectedSauce = action.payload;
         },
+        setCart: (state, action) => {
+          state.items = action.payload;
+        },
     }
 });
 export const cartSelector=(state)=>state.cart;
-export const {addProduct,deleteProduct,minusCount,clearProducts,updateTotalPrice,updateSelectedIngredients,increaseCartItem,updateExcludedIngredients,updateSelectedSauce}=cartSlice.actions;
+export const {addProduct,deleteProduct,minusCount,clearProducts,updateTotalPrice,updateSelectedIngredients,increaseCartItem,updateExcludedIngredients,updateSelectedSauce,setCart}=cartSlice.actions;
 export default cartSlice.reducer;

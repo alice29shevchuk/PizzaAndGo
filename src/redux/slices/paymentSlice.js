@@ -3,6 +3,7 @@ const initialState={
     isAuthorized: false,
     order: {
         number:'',
+        id:0,
         name: '',
         email:'',
         phoneNumber: '',
@@ -10,6 +11,7 @@ const initialState={
         totalPrice: 0,
         comment:'',
         paymentMethod: '',
+        orderData:'',
     },
 }
 const paymentSlice = createSlice({

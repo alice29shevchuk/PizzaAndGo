@@ -43,10 +43,10 @@ function Header()
         </div>
       </div>
       </Link>
-      {location.pathname !== '/basket' && <Search className="header__search" />}
+      {location.pathname !== '/basket' && location.pathname !== '/order' && location.pathname !== '/payment' && location.pathname !== '/user-profile' && <Search className="header__search" />}
       <div className="header__cart">
       {
-        location.pathname!=='/basket' && 
+        location.pathname!=='/basket' && location.pathname !== '/order' && location.pathname !== '/payment' && location.pathname !== '/user-profile' &&
         <Link to="/basket" className="button button--cart">
           <span>{totalPrice} грн</span>
           <div className="button__delimiter"></div>

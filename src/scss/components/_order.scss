@@ -1,0 +1,25 @@
+@import '../variables';
+
+.order-totaldetails {
+    text-align: center;
+}
+
+.product-item {
+    border: 1px solid #ccc;
+    border-radius: 20px;
+    padding: 10px;
+    margin: 10px;
+}
+.product-item h4{
+    color: $orange;
+ }
+.product-item p{
+   color: #8D8D8D;
+}
+.total-price {
+    font-weight: bold;
+}
+.total-price span{
+    color: $orange;
+    font-family: 'Courier New', Courier, monospace;
+}
