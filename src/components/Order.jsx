@@ -8,6 +8,7 @@ export const Order = () => {
     <div className='container'>
     <div className='order-totaldetails'>
         <h4>Ваш заказ №{order.number}</h4>
+        <p>Заказ оформлен на: <span>{order.orderData}</span></p>
         {order.products.map((product) => (
             <div key={product.id} className='product-item'>
                 <h4>{product.title} ({product.count}x)</h4>

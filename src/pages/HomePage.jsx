@@ -28,6 +28,22 @@ export const HomePage = () => {
     const [notFound, setNotFound] = React.useState(false);
      
     const [orderSort,setOrderSort] = useState('');
+    // React.useEffect(() => {
+    //   const clearLocalStorage = () => {
+    //     localStorage.clear();
+    //   };
+  
+    //   // Attach the event listener when the component mounts
+    //   window.addEventListener('beforeunload', clearLocalStorage);
+  
+    //   // Detach the event listener when the component unmounts
+    //   return () => {
+    //     window.removeEventListener('beforeunload', clearLocalStorage);
+    //   };
+    // }, []);
+
+
+
     React.useEffect(() => {
       if (window.location.search) {
         const params = qs.parse(window.location.search.substring(1));
@@ -90,6 +106,7 @@ export const HomePage = () => {
         dispatch(setFilters({ selectedCategoryId, selectedSortList, currentPage, orderSort }));
       }
     }, []);
+
     React.useEffect(()=>{
         setIsLoading(true);
         axios.get(`https://6589685a324d41715258e658.mockapi.io/pizzas?page=${currentPage}&${selectedCategoryId>0? `category=${selectedCategoryId}`:''}&sortBy=${selectedSortList.sortBy.replace('-','')}&order=${selectedSortList.sortBy.includes('-')?'desc':'asc'}${search}`)

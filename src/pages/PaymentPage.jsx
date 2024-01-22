@@ -7,7 +7,8 @@ import 'react-phone-input-2/lib/style.css';
 import StripeCheckout from 'react-stripe-checkout';
 import {json, useNavigate} from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
-
+import TimePicker from 'react-time-picker';
+import 'react-time-picker/dist/TimePicker.css';
 export const PaymentPage = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -19,12 +20,44 @@ export const PaymentPage = () => {
   const [paymentMethod, setPaymentMethod] = React.useState('cash');
   const [orderNumber, setOrderNumber] = React.useState('');
   const idUser = JSON.parse(localStorage.getItem('user')).uid;
+  const [orderTime,setOrderTime] = React.useState(getDefaultTime());
+  //
+  //time
+  //
+  const [currentTime, setCurrentTime] = React.useState(getDefaultTime());
+  const [timeOptions, setTimeOptions] = React.useState([]);
+
+  function getDefaultTime() {
+    const now = new Date();
+    now.setMinutes(now.getMinutes() + 10);
+    return now.toTimeString().substring(0, 5);
+  }
+  useEffect(() => {
+    const now = new Date();
+    now.setMinutes(now.getMinutes() + 10);
+    const options = [];
+    while (now.getHours() < 22 || (now.getHours() === 22 && now.getMinutes() === 0)) {
+      options.push(now.toTimeString().substring(0, 5));
+      now.setMinutes(now.getMinutes() + 10);
+    }
+
+    setTimeOptions(options);
+  }, []);
+
+  const handleTimeChange = (e) => {
+    setCurrentTime(e.target.value);
+    setOrderTime(e.target.value);
+  };
+  //
+  //
+  //
   useEffect(() => {
     const savedOrder = JSON.parse(localStorage.getItem('order')) || {};
     setPhone(savedOrder.phoneNumber || '');
     setComment(savedOrder.comment || '');
     setPaymentMethod(savedOrder.paymentMethod || 'cash');
     setIsPhoneValid(savedOrder.phoneNumber && savedOrder.phoneNumber.length === 12);
+    setOrderTime(savedOrder.orderData || getDefaultTime());
   }, []);
   useEffect(() => {
     const order = {
@@ -45,11 +78,11 @@ export const PaymentPage = () => {
       totalPrice,
       comment:comment,
       paymentMethod:paymentMethod,
-      orderData:new Date().toISOString(),
+      orderData:orderTime,
     };
     dispatch(setOrder(order));
     localStorage.setItem('order',JSON.stringify(order));
-  }, [phone, comment, items, totalPrice, dispatch, name, email,paymentMethod]);
+  }, [phone, comment, items, totalPrice, dispatch, name, email,paymentMethod,orderTime]);
   useEffect(() => {
     const generatedOrderNumber = uuidv4();
     setOrderNumber(generatedOrderNumber);
@@ -107,8 +140,14 @@ export const PaymentPage = () => {
                 Наличные
               </label>
             </div>
-            <br />
         <br />
+        <select id="timePicker" className="custom-select" name="timePicker" value={orderTime} onChange={handleTimeChange}>
+        {timeOptions.map((time, index) => (
+          <option key={index} value={time}>
+            {time}
+          </option>
+        ))}
+        </select>
         <h4>Комментарий к заказу</h4>
         <textarea value={comment} onChange={(e) => setComment(e.target.value)} maxLength={100} className="payment-input-comment"/>
       </div>

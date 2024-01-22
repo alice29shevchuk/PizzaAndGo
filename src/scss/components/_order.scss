@@ -3,7 +3,13 @@
 .order-totaldetails {
     text-align: center;
 }
-
+.order-totaldetails p{
+    color:#8D8D8D;
+}
+.order-totaldetails p span{
+    color:#8D8D8D;
+    font-weight: bold;
+}
 .product-item {
     border: 1px solid #ccc;
     border-radius: 20px;

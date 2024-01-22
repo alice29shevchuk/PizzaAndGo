@@ -115,5 +115,13 @@
     .payment-method input {
         margin-right: 5px;
     }
+    .custom-select {
+        width: 49%;
+        padding: 8px;
+        border: 1px solid #ccc;
+        border-radius: 4px; 
+        font-size: 14px;
+        margin-bottom: 20px;
+      }      
 
 }

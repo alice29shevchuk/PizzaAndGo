@@ -3,6 +3,7 @@ import { useSelector,useDispatch } from 'react-redux';
 import {setUser,deleteUser} from '../redux/slices/userSlice';
 import {useNavigate} from 'react-router-dom';
 import { getAuth,updateProfile, updatePassword, reauthenticateWithCredential, EmailAuthProvider,sendPasswordResetEmail } from "firebase/auth";
+import { clearProducts } from '../redux/slices/cartSlice';
 
 export const UserProfile = () => {
     const dispatch = useDispatch();
@@ -110,6 +111,8 @@ export const UserProfile = () => {
     const handleLogOut = ()=>{
     dispatch(deleteUser());
     localStorage.removeItem('user');
+    dispatch(clearProducts());
+    localStorage.removeItem('order');
     navigate('/login');
     }
     return (
