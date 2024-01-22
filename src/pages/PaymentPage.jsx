@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { setOrder } from '../redux/slices/paymentSlice';
-import { cartSelector } from '../redux/slices/cartSlice';
+import { cartSelector,clearProducts } from '../redux/slices/cartSlice';
 import PhoneInput from 'react-phone-input-2';
 import 'react-phone-input-2/lib/style.css';
 import StripeCheckout from 'react-stripe-checkout';
@@ -19,12 +19,13 @@ export const PaymentPage = () => {
   const [paymentMethod, setPaymentMethod] = React.useState('cash');
   const [orderNumber, setOrderNumber] = React.useState('');
   const idUser = JSON.parse(localStorage.getItem('user')).uid;
-  // useEffect(() => {
-  //   const savedOrder = JSON.parse(localStorage.getItem('order')) || {};
-  //   setPhone(savedOrder.phoneNumber || '');
-  //   setComment(savedOrder.comment || '');
-  //   setPaymentMethod(savedOrder.paymentMethod || '');
-  // }, []);
+  useEffect(() => {
+    const savedOrder = JSON.parse(localStorage.getItem('order')) || {};
+    setPhone(savedOrder.phoneNumber || '');
+    setComment(savedOrder.comment || '');
+    setPaymentMethod(savedOrder.paymentMethod || 'cash');
+    setIsPhoneValid(savedOrder.phoneNumber && savedOrder.phoneNumber.length === 12);
+  }, []);
   useEffect(() => {
     const order = {
       number:orderNumber,
@@ -48,7 +49,6 @@ export const PaymentPage = () => {
     };
     dispatch(setOrder(order));
     localStorage.setItem('order',JSON.stringify(order));
-    localStorage.setItem('order-in-progress',JSON.stringify(order));
   }, [phone, comment, items, totalPrice, dispatch, name, email,paymentMethod]);
   useEffect(() => {
     const generatedOrderNumber = uuidv4();
@@ -63,10 +63,8 @@ export const PaymentPage = () => {
     navigate('/order');
   };
   const handlePayment = () => {
-    // alert(`Оплата методом ${paymentMethod}`);
     navigate('/order');
-    localStorage.removeItem('cart');
-    localStorage.removeItem('order');
+    dispatch(clearProducts());
   };
   const handlePaymentMethodChange=(event)=>{
     setPaymentMethod(event.target.value);
@@ -110,6 +108,7 @@ export const PaymentPage = () => {
               </label>
             </div>
             <br />
+        <br />
         <h4>Комментарий к заказу</h4>
         <textarea value={comment} onChange={(e) => setComment(e.target.value)} maxLength={100} className="payment-input-comment"/>
       </div>
