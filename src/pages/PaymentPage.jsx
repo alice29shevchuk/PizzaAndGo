@@ -5,23 +5,30 @@ import { cartSelector } from '../redux/slices/cartSlice';
 import PhoneInput from 'react-phone-input-2';
 import 'react-phone-input-2/lib/style.css';
 import StripeCheckout from 'react-stripe-checkout';
-import {useNavigate} from 'react-router-dom';
+import {json, useNavigate} from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
 
 export const PaymentPage = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const {id,name,email } = useSelector((state) => state.user);
+  const { name , email } = useSelector((state) => state.user);
   const { totalPrice, items } = useSelector(cartSelector);
   const [phone, setPhone] = React.useState('');
   const [comment, setComment] = React.useState('');
   const [isPhoneValid, setIsPhoneValid] = React.useState(false);
   const [paymentMethod, setPaymentMethod] = React.useState('cash');
   const [orderNumber, setOrderNumber] = React.useState('');
+  const idUser = JSON.parse(localStorage.getItem('user')).uid;
+  // useEffect(() => {
+  //   const savedOrder = JSON.parse(localStorage.getItem('order')) || {};
+  //   setPhone(savedOrder.phoneNumber || '');
+  //   setComment(savedOrder.comment || '');
+  //   setPaymentMethod(savedOrder.paymentMethod || '');
+  // }, []);
   useEffect(() => {
     const order = {
       number:orderNumber,
-      id,
+      id:idUser,
       name,
       email,
       phoneNumber: phone,
@@ -40,8 +47,13 @@ export const PaymentPage = () => {
       orderData:new Date().toISOString(),
     };
     dispatch(setOrder(order));
-    console.log(order);
-  }, [phone, comment, items, totalPrice, dispatch, name, email,paymentMethod,id]);
+    localStorage.setItem('order',JSON.stringify(order));
+    localStorage.setItem('order-in-progress',JSON.stringify(order));
+  }, [phone, comment, items, totalPrice, dispatch, name, email,paymentMethod]);
+  useEffect(() => {
+    const generatedOrderNumber = uuidv4();
+    setOrderNumber(generatedOrderNumber);
+  }, []);
   const handlePhoneChange = (value, data, event, formattedValue) => {
     setIsPhoneValid(value.length==12);
     setPhone(value);
@@ -53,22 +65,18 @@ export const PaymentPage = () => {
   const handlePayment = () => {
     // alert(`Оплата методом ${paymentMethod}`);
     navigate('/order');
+    localStorage.removeItem('cart');
+    localStorage.removeItem('order');
   };
   const handlePaymentMethodChange=(event)=>{
     setPaymentMethod(event.target.value);
   }
-  useEffect(() => {
-    const generatedOrderNumber = uuidv4();
-    setOrderNumber(generatedOrderNumber);
-  }, []);
   return (
     <div className='container'>
     <div className="payment-container">
     <h1>Оплата</h1>
     <div className="payment-details">
       <div className="user-details">
-        <h1>Id</h1>
-        <input type="text" value={id} readOnly/>
         <h4>Ваше имя</h4>
         <input type="text" value={name} readOnly className="payment-input" />
         <br />

@@ -76,11 +76,9 @@ export const PizzaInfo = () => {
           selectedIngredients,
           excludedIngredients,
           selectedSauce,
-          totalPrice
         };
 
         dispatch(addProduct(item));
-        localStorage.setItem('cart',JSON.stringify([...items, item]));
         navigate('/basket');
     };
     

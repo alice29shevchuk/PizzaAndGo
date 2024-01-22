@@ -4,8 +4,15 @@ const initialState={
     items:[],
     selectedIngredients: [],
     excludedIngredients:[],
-    selectedSauce: ''
+    selectedSauce: '',
 }
+const storedCart = localStorage.getItem('cart');
+    if (storedCart) {
+      const { totalPrice, items } = JSON.parse(storedCart);
+      initialState.items=items;
+      initialState.totalPrice=totalPrice;
+
+    }
 const cartSlice = createSlice({
     name:'cart',
     initialState,
@@ -28,6 +35,8 @@ const cartSlice = createSlice({
             state.totalPrice = state.items.reduce((sum, obj) => {
               return (obj.price * obj.count) + sum;
             }, 0);
+            localStorage.setItem('cart', JSON.stringify(state));
+
           },
         deleteProduct(state, action) {
             const { id, selectedIngredients,excludedIngredients,selectedSauce } = action.payload;
@@ -41,6 +50,8 @@ const cartSlice = createSlice({
             state.totalPrice = state.items.reduce((sum, obj) => {
               return (obj.price * obj.count) + sum;
             }, 0);
+            localStorage.setItem('cart', JSON.stringify(state));
+
           },
         minusCount(state, action) {
             const { id, selectedIngredients,excludedIngredients,selectedSauce } = action.payload;
@@ -56,10 +67,14 @@ const cartSlice = createSlice({
             state.totalPrice = state.items.reduce((sum, obj) => {
               return sum + (obj.price * obj.count);
             }, 0);
+            localStorage.setItem('cart', JSON.stringify(state));
+
           },
         clearProducts(state){
             state.items=[];
             state.totalPrice=0;
+            localStorage.removeItem('cart');
+
         },
         updateTotalPrice: (state, action) => {
             state.totalPrice = action.payload;

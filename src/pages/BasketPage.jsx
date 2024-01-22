@@ -2,7 +2,7 @@ import React from 'react';
 import { Link,useNavigate } from 'react-router-dom';
 import {useSelector,useDispatch} from 'react-redux';
 import { CartProduct } from '../components/CartProduct';
-import {cartSelector, clearProducts,setCart} from '../redux/slices/cartSlice';
+import {addProduct, cartSelector, clearProducts,setCart} from '../redux/slices/cartSlice';
 import { CartEmpty } from '../components/CartEmpty';
 import {useAuth} from '../hooks/use-auth';
 
@@ -13,13 +13,6 @@ export const BasketPage = () => {
   const {totalPrice,items} = useSelector(cartSelector);
   const totalCount = items.reduce((sum,item)=>sum+item.count,0);
   const{isAuth} = useAuth();
-  React.useEffect(() => {
-    const storedCart = localStorage.getItem('cart');
-    if (storedCart) {
-      const parsedCart = JSON.parse(storedCart);
-      dispatch(setCart(parsedCart));
-    }
-  }, []);
   const onClickClear=()=>{
     if(window.confirm('Вы действительно хотите очистить всю корзину?')){
       dispatch(clearProducts());
@@ -39,6 +32,7 @@ export const BasketPage = () => {
   //   return <CartEmpty></CartEmpty>
   // }
   if(items.length==0){
+    localStorage.removeItem('cart');
     return <CartEmpty></CartEmpty>
   }
   return (

@@ -4,7 +4,6 @@ import { Link } from 'react-router-dom';
 
 export const Order = () => {
     const {order}=useSelector((state)=>state.payment);
-    console.log(order);
     return (
     <div className='container'>
     <div className='order-totaldetails'>
