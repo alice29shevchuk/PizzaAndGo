@@ -17,11 +17,11 @@ function Header()
   const {totalPrice,items} = useSelector(cartSelector);
   const totalCount = items.reduce((sum,item)=>sum+item.count,0);
   const handleLogoClick = () => {
-    localStorage.removeItem('filterState');
+    sessionStorage.removeItem('filterState');///////
     dispatch(resetFilters());
   };
   React.useEffect(() => {
-    const savedUser = localStorage.getItem('user');
+    const savedUser = sessionStorage.getItem('user');////////////////////////
     if (savedUser) {
       const parsedUser = JSON.parse(savedUser);
       dispatch(setUser({

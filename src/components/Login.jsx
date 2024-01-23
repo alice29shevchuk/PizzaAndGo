@@ -22,7 +22,7 @@ export const Login = () => {
                 token:user.accessToken,
                 name:user.displayName,
             }));
-            localStorage.setItem('user', JSON.stringify(user));
+            sessionStorage.setItem('user', JSON.stringify(user));//////////////////////////
             navigate('/');
         })
         .catch((error)=>

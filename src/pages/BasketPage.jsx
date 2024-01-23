@@ -32,7 +32,7 @@ export const BasketPage = () => {
   //   return <CartEmpty></CartEmpty>
   // }
   if(items.length==0){
-    localStorage.removeItem('cart');
+    sessionStorage.removeItem('cart');////////////////////////////
     return <CartEmpty></CartEmpty>
   }
   return (

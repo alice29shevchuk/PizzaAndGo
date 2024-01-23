@@ -30,10 +30,6 @@ const filterSlice = createSlice({
         },
         setFilters(state,action){
             return { ...state, ...action.payload };
-
-            //state.currentPage = Number(action.payload.currentPage);
-            // state.selectedSortList = action.payload.selectedSortList;
-            //state.selectedCategoryId = Number(action.payload.selectedCategoryId);
         },
         resetFilters: (state) => {
             return initialState;

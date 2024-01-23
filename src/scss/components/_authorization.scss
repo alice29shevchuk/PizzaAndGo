@@ -43,6 +43,14 @@
       color: #7b7b7b;
       text-align: center;
     }
+    .forgot-pass{
+      margin-top: 5px;
+      margin-bottom: 10px;
+      font-style: italic;
+    }
+    .forgot-pass:hover{
+      cursor: pointer;
+    }
     .registration-text {
       display: flex;
       align-items: center;

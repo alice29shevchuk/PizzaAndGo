@@ -19,7 +19,7 @@ export const PaymentPage = () => {
   const [isPhoneValid, setIsPhoneValid] = React.useState(false);
   const [paymentMethod, setPaymentMethod] = React.useState('cash');
   const [orderNumber, setOrderNumber] = React.useState('');
-  const idUser = JSON.parse(localStorage.getItem('user')).uid;
+  const idUser = JSON.parse(sessionStorage.getItem('user')).uid;/////////////////////////
   const [orderTime,setOrderTime] = React.useState(getDefaultTime());
   //
   //time
@@ -52,7 +52,7 @@ export const PaymentPage = () => {
   //
   //
   useEffect(() => {
-    const savedOrder = JSON.parse(localStorage.getItem('order')) || {};
+    const savedOrder = JSON.parse(sessionStorage.getItem('order')) || {};/////////////////////////////
     setPhone(savedOrder.phoneNumber || '');
     setComment(savedOrder.comment || '');
     setPaymentMethod(savedOrder.paymentMethod || 'cash');
@@ -81,7 +81,7 @@ export const PaymentPage = () => {
       orderData:orderTime,
     };
     dispatch(setOrder(order));
-    localStorage.setItem('order',JSON.stringify(order));
+    sessionStorage.setItem('order',JSON.stringify(order));///////////////////////////////////
   }, [phone, comment, items, totalPrice, dispatch, name, email,paymentMethod,orderTime]);
   useEffect(() => {
     const generatedOrderNumber = uuidv4();

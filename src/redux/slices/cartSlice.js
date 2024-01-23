@@ -6,7 +6,7 @@ const initialState={
     excludedIngredients:[],
     selectedSauce: '',
 }
-const storedCart = localStorage.getItem('cart');
+const storedCart = sessionStorage.getItem('cart');/////////////////////////
     if (storedCart) {
       const { totalPrice, items } = JSON.parse(storedCart);
       initialState.items=items;
@@ -35,7 +35,7 @@ const cartSlice = createSlice({
             state.totalPrice = state.items.reduce((sum, obj) => {
               return (obj.price * obj.count) + sum;
             }, 0);
-            localStorage.setItem('cart', JSON.stringify(state));
+            sessionStorage.setItem('cart', JSON.stringify(state));////////////////////////
 
           },
         deleteProduct(state, action) {
@@ -50,7 +50,7 @@ const cartSlice = createSlice({
             state.totalPrice = state.items.reduce((sum, obj) => {
               return (obj.price * obj.count) + sum;
             }, 0);
-            localStorage.setItem('cart', JSON.stringify(state));
+            sessionStorage.setItem('cart', JSON.stringify(state));/////////////////////////
 
           },
         minusCount(state, action) {
@@ -67,13 +67,13 @@ const cartSlice = createSlice({
             state.totalPrice = state.items.reduce((sum, obj) => {
               return sum + (obj.price * obj.count);
             }, 0);
-            localStorage.setItem('cart', JSON.stringify(state));
+            sessionStorage.setItem('cart', JSON.stringify(state));/////////////////////////////
 
           },
         clearProducts(state){
             state.items=[];
             state.totalPrice=0;
-            localStorage.removeItem('cart');
+            sessionStorage.removeItem('cart');/////////////////////////
 
         },
         updateTotalPrice: (state, action) => {

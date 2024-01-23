@@ -8,6 +8,7 @@ import { NotFoundCard } from '../components/NotFoundCard';
 import { SearchContext } from '../App';
 import {useSelector, useDispatch} from 'react-redux';
 import {setCategoryId,setCurrentPage,setSelectedPageList,setPageCount,setFilters,resetFilters} from '../redux/slices/filterSlice';
+import {setUser} from '../redux/slices/userSlice';
 import axios from 'axios';
 import qs from 'qs';
 import {Link, useNavigate} from 'react-router-dom';
@@ -28,21 +29,6 @@ export const HomePage = () => {
     const [notFound, setNotFound] = React.useState(false);
      
     const [orderSort,setOrderSort] = useState('');
-    // React.useEffect(() => {
-    //   const clearLocalStorage = () => {
-    //     localStorage.clear();
-    //   };
-  
-    //   // Attach the event listener when the component mounts
-    //   window.addEventListener('beforeunload', clearLocalStorage);
-  
-    //   // Detach the event listener when the component unmounts
-    //   return () => {
-    //     window.removeEventListener('beforeunload', clearLocalStorage);
-    //   };
-    // }, []);
-
-
 
     React.useEffect(() => {
       if (window.location.search) {
@@ -72,7 +58,7 @@ export const HomePage = () => {
         }
     
         dispatch(setFilters(newFilters));
-        localStorage.setItem('filterState', JSON.stringify(newFilters));
+        sessionStorage.setItem('filterState', JSON.stringify(newFilters));//////////////////////////////
       }
     }, []);
     
@@ -95,12 +81,12 @@ export const HomePage = () => {
           ...(searchValue && { q: searchValue }), 
         });
         navigate(`?${queryString}`);
-        localStorage.setItem('filterState', JSON.stringify({ selectedCategoryId, selectedSortList, currentPage, orderSort }));
+        sessionStorage.setItem('filterState', JSON.stringify({ selectedCategoryId, selectedSortList, currentPage, orderSort }));///////////////
       }
     },[selectedCategoryId,selectedSortList,searchValue,currentPage,orderSort]);
 
     React.useEffect(() => {
-      const savedFilterState = localStorage.getItem('filterState');
+      const savedFilterState = sessionStorage.getItem('filterState');///////////////////////
       if (savedFilterState) {
         const { selectedCategoryId, selectedSortList, currentPage, orderSort } = JSON.parse(savedFilterState);
         dispatch(setFilters({ selectedCategoryId, selectedSortList, currentPage, orderSort }));
@@ -143,7 +129,7 @@ export const HomePage = () => {
             <Categories value = {selectedCategoryId} onClickCategory={(id)=>{
               if(id==0){
                 navigate('/');
-                localStorage.removeItem('filterState');
+                sessionStorage.removeItem('filterState');//////////
                 dispatch(resetFilters());
 
               }

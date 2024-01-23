@@ -2,97 +2,106 @@ import React,{useState} from 'react'
 import { useSelector,useDispatch } from 'react-redux';
 import {setUser,deleteUser} from '../redux/slices/userSlice';
 import {useNavigate} from 'react-router-dom';
-import { getAuth,updateProfile, updatePassword, reauthenticateWithCredential, EmailAuthProvider,sendPasswordResetEmail } from "firebase/auth";
+import { getAuth,updateProfile, updatePassword, reauthenticateWithCredential, EmailAuthProvider,sendPasswordResetEmail,onAuthStateChanged } from "firebase/auth";
 import { clearProducts } from '../redux/slices/cartSlice';
 
 export const UserProfile = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const [isEditing, setIsEditing] = useState(false);
-    const { id, name, email } = useSelector((state) => state.user);
+    const { name, email } = useSelector((state) => state.user);
     const [newName, setNewName] = useState(name);
     const [newEmail, setNewEmail] = useState(email);
     const [currentPassword, setCurrentPassword] = useState('');
     const [newPassword, setNewPassword] = useState(''); 
+    const [isAuthCompleted, setIsAuthCompleted] = useState(false);
 
     React.useEffect(() => {
-    const savedUser = localStorage.getItem('user');
+      setNewName(name);
+      setNewEmail(email);
+    }, [name, email]);
+    React.useEffect(() => {
+    const savedUser = sessionStorage.getItem('user');///////////////////////////////////////////////////////
     if (savedUser) {
       const parsedUser = JSON.parse(savedUser);
       dispatch(setUser({
-        id:parsedUser.uid,
+        id: parsedUser.uid,
         email: parsedUser.email,
         name: parsedUser.displayName,
       }));  
     }
-    }, [dispatch]);
-    const handleUpdateProfile = async () => {
-        setCurrentPassword('');
-        setNewPassword('');
-        try {
-          const current = getAuth().currentUser;
-          dispatch(
-            setUser({
-              email: newEmail || email,
-              name: newName || name,
-            })
-          );
-          const updatedUser = {
-            email: newEmail || email,
-            displayName: newName || name,
-          };
-          await updateProfile(current, {
-            displayName: newName || name,
-            email: newEmail || email,
-          });
-      
-          if (newPassword) {
-            try {
-              const credential = EmailAuthProvider.credential(email, currentPassword);
-              await reauthenticateWithCredential(current, credential);
-              await updatePassword(current, newPassword);
-            } catch (error) {      
-              if (error.code === 'auth/invalid-credential') {
-                alert('Такого пользователя не существует...', error.message);
-                return;
-              } else if (error.code === 'auth/invalid-email') {
-                alert('Не корректный формат email. Пример: example@gmail.com', error.message);
-                return;
-              } else if (error.code === 'auth/weak-password') {
-                alert('Слишком слабый пароль.', error.message);
-                return;
-              } else if (error.code === 'auth/user-token-expired') {
-                alert('Срок действия токена пользователя истек...');
-                navigate('/login');
-              } 
-              else if(error.code==='auth/missing-password'){
-                alert('Отсутствует текущий пароль.');
-                return;
-              }
-              else {
-                alert('Ошибка при обновлении пароля:(', error.message);
-              }
-            }
-          }
-      
-          const savedUser = localStorage.getItem('user');
-          if (savedUser) {
-            const parsedUser = JSON.parse(savedUser);
-            parsedUser.email = updatedUser.email;
-            parsedUser.displayName = updatedUser.displayName;
-            localStorage.setItem('user', JSON.stringify(parsedUser));
-          }
-      
-          navigate('/user-profile');
-          setIsEditing(false);
-        } catch (error) {
-          console.error('Ошибка при обновлении профиля:', error);
-          alert('Ошибка при обновлении профиля:(');
-        }
-      };
-      const handleOrderHistory=()=>{
-        navigate('/order-history');
+    const auth = getAuth();
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setIsAuthCompleted(true);
       }
+    });
+
+    return () => unsubscribe();
+    }, [dispatch]);
+
+    const handleUpdateProfile = async () => {
+    setCurrentPassword('');
+    setNewPassword('');
+
+    // Проверка завершения аутентификации
+    if (!isAuthCompleted) {
+      alert('Пожалуйста, дождитесь завершения аутентификации.');
+      return;
+    }
+
+    try {
+      const current = getAuth().currentUser;
+      dispatch(
+        setUser({
+          email: newEmail || email,
+          name: newName || name,
+        })
+      );
+
+      const updatedUser = {
+        email: newEmail || email,
+        displayName: newName || name,
+      };
+
+      await updateProfile(current, {
+        displayName: newName || name,
+        email: newEmail || email,
+      });
+
+      if (newPassword) {
+        try {
+          const credential = EmailAuthProvider.credential(email, currentPassword);
+          await reauthenticateWithCredential(current, credential);
+          await updatePassword(current, newPassword);
+        } catch (error) {
+          if (error.code === 'auth/missing-password') {
+            alert('Отсутствует текущий пароль.');
+            return;
+          } else {
+            alert('Ошибка при обновлении пароля:(', error.message);
+            return;
+          }
+        }
+      }
+
+      const savedUser = sessionStorage.getItem('user');
+      if (savedUser) {
+        const parsedUser = JSON.parse(savedUser);
+        parsedUser.email = updatedUser.email;
+        parsedUser.displayName = updatedUser.displayName;
+        sessionStorage.setItem('user', JSON.stringify(parsedUser));
+      }
+
+      navigate('/');
+    } catch (error) {
+      console.error('Ошибка при обновлении профиля:', error);
+      alert('Ошибка при обновлении профиля:(');
+    }
+  };
+  const handleOrderHistory=()=>{
+      navigate('/order-history');
+  }
     const handleForgotPassword = async () => {
         try {
             const current = getAuth().currentUser;
@@ -110,9 +119,9 @@ export const UserProfile = () => {
       };
     const handleLogOut = ()=>{
     dispatch(deleteUser());
-    localStorage.removeItem('user');
+    sessionStorage.removeItem('user');///////////////////////////////
     dispatch(clearProducts());
-    localStorage.removeItem('order');
+    sessionStorage.removeItem('order');///////////////////////////
     navigate('/login');
     }
     return (
