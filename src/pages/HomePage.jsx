@@ -8,7 +8,6 @@ import { NotFoundCard } from '../components/NotFoundCard';
 import { SearchContext } from '../App';
 import {useSelector, useDispatch} from 'react-redux';
 import {setCategoryId,setCurrentPage,setSelectedPageList,setPageCount,setFilters,resetFilters} from '../redux/slices/filterSlice';
-import {setUser} from '../redux/slices/userSlice';
 import axios from 'axios';
 import qs from 'qs';
 import {Link, useNavigate} from 'react-router-dom';
@@ -81,7 +80,7 @@ export const HomePage = () => {
           ...(searchValue && { q: searchValue }), 
         });
         navigate(`?${queryString}`);
-        sessionStorage.setItem('filterState', JSON.stringify({ selectedCategoryId, selectedSortList, currentPage, orderSort }));///////////////
+        sessionStorage.setItem('filterState', JSON.stringify({ selectedCategoryId ,selectedSortList, currentPage, orderSort }));///////////////
       }
     },[selectedCategoryId,selectedSortList,searchValue,currentPage,orderSort]);
 

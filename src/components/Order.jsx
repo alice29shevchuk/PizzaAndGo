@@ -1,8 +1,16 @@
 import React from 'react';
-import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
-
+import { useSelector, useDispatch } from 'react-redux';
+import { setOrder } from '../redux/slices/paymentSlice';
 export const Order = () => {
+  const dispatch = useDispatch();
+  React.useEffect(() => {
+    const storedOrder = sessionStorage.getItem('order');
+    if (storedOrder) {
+      const parsedOrder = JSON.parse(storedOrder);
+      dispatch(setOrder(parsedOrder));
+    }
+  }, []);
     const {order}=useSelector((state)=>state.payment);
     return (
     <div className='container'>
