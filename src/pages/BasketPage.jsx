@@ -5,6 +5,7 @@ import { CartProduct } from '../components/CartProduct';
 import {addProduct, cartSelector, clearProducts,setCart} from '../redux/slices/cartSlice';
 import { CartEmpty } from '../components/CartEmpty';
 import {useAuth} from '../hooks/use-auth';
+import Footer from '../components/Footer';
 
 export const BasketPage = () => {
   const dispatch = useDispatch();
@@ -36,6 +37,7 @@ export const BasketPage = () => {
     return <CartEmpty></CartEmpty>
   }
   return (
+    <>
     <div className="container container--cart">
       <div className="cart">
         <div className="cart__top">
@@ -144,5 +146,7 @@ export const BasketPage = () => {
         </div>
       </div>
     </div>
+    <Footer></Footer>
+    </>
   )
 }

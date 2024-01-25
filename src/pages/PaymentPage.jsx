@@ -9,6 +9,8 @@ import {json, useNavigate} from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
 import TimePicker from 'react-time-picker';
 import 'react-time-picker/dist/TimePicker.css';
+import Footer from '../components/Footer';
+
 export const PaymentPage = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -21,6 +23,7 @@ export const PaymentPage = () => {
   const [orderNumber, setOrderNumber] = React.useState('');
   const idUser = JSON.parse(sessionStorage.getItem('user')).uid;/////////////////////////
   const [orderTime,setOrderTime] = React.useState(getDefaultTime());
+
   //
   //time
   //
@@ -103,6 +106,7 @@ export const PaymentPage = () => {
     setPaymentMethod(event.target.value);
   }
   return (
+    <>
     <div className='container'>
     <div className="payment-container">
     <h1>Оплата</h1>
@@ -200,5 +204,7 @@ export const PaymentPage = () => {
     </div>
   </div>  
   </div>
+  <Footer></Footer>
+  </>
   );
 };

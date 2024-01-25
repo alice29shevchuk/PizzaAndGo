@@ -1,0 +1,191 @@
+@import '../variables';
+.Footer_footer__OYoYH {
+    margin-top: 40px;
+    margin-left: 30px;
+    margin-right: 30px;
+    background-color: #f0f0f0;
+    padding: 20px;
+    border-radius: 20px;
+    font-family: 'Arial', sans-serif;
+  }
+  
+  .FooterTop_top__heUwq {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  
+    .Logo_logo__5xyYV img {
+      height: 72px;
+    }
+  
+    .buttonBackToTop {
+      width: 100px;
+      background-color: $orange;
+      color: #fff;
+      border: none;
+      padding: 10px;
+      cursor: pointer;
+      border-radius: 20px;
+  
+      &:hover {
+        background-color: $orange;
+      }
+  
+      .FooterBackToTop_buttonTitle__RtgDZ {
+        margin-right: 5px;
+      }
+  
+      .FooterBackToTop_buttonIcon__eb0Hk {
+        fill: #fff;
+      }
+    }
+  }
+  
+  // Стилі для тіла футера
+  .FooterBodyDesktop_body__7IbXM {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+  
+    .FooterBodyDesktop_bodyLeft__ozKR1,
+    .FooterBodyDesktop_bodyRight__1x7wK {
+      flex: 1;
+    }
+  
+    // Стилі для блоків у лівій частині
+    .FooterBodyDesktop_bodyLeft__ozKR1 {
+      display: flex;
+      flex-direction:row;
+      gap: 100px;
+
+      .FooterBodyBlock_bodyBlock__DUO99 {
+        .FooterBodyBlock_title__mwURC {
+          font-weight: bold;
+          font-size: 18px;
+          margin-bottom: 10px;
+        }
+  
+        .FooterNav_navLinks__2fLr3 {
+            list-style: none;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+          
+            .FooterNav_navLink__qa4x6 {
+              text-decoration: none;
+              color: #333;
+              font-size: 14px;
+              margin-bottom: 5px;
+          
+              &:hover {
+                color: $orange;
+              }
+            }
+          }
+      }
+    }
+  
+    // Стилі для блоків у правій частині
+    .FooterBodyDesktop_bodyRight__1x7wK {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+  
+      .FooterBodyDesktop_downloadLinks__bk_tK {
+        .DownloadApp_downloadApp__HyenI {
+          .DownloadApp_link__rF28d {
+            img {
+              height: 46px;
+            }
+          }
+        }
+      }
+    }
+  }
+  
+  // Стилі для блоку соціальних мереж та копірайту
+  .Socials_socials__cEmAe {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-end;
+    justify-content:flex-end;
+  
+    .Socials_socialLink__AUZ05 {
+      text-decoration: none;
+      margin-right: 10px;
+  
+      .Socials_icon__HXVZS {
+        width: 18px;
+        height: 18px;
+        fill: #333;
+      }
+    }
+  
+    .MadeBy_madeBy__A53ft {
+      font-size: 12px;
+      color: #777;
+  
+      .MadeBy_link__1QdLs {
+        text-decoration: none;
+        color: #777;
+        font-weight: bold;
+  
+        &:hover {
+          color: #007bff;
+        }
+      }
+    }
+  }
+  
+  // Стилі для нижньої частини футера
+  .FooterBottomDesktop_bottom__emi2i {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap; 
+    margin-top: 20px;
+  
+    .FooterBottomDesktop_copyright__azWrg {
+      font-size: 14px;
+      color: #777;
+      margin-bottom: 10px;
+    }
+  
+    .FooterBottomLinks_bottomLinks__R_JJd {
+      list-style: none;
+      padding: 0;
+  
+      .FooterBottomLinks_bottomLink__yBAmE {
+        margin-bottom: 5px;
+  
+        a {
+          text-decoration: none;
+          color: #333;
+          font-size: 12px;
+  
+          &:hover {
+            color: $orange;
+          }
+        }
+      }
+    }
+  }
+  @media screen and (max-width: 768px) {
+    .FooterBodyDesktop_body__7IbXM .FooterBodyDesktop_bodyLeft__ozKR1{
+        display: block;
+        gap: 0px;
+    }
+    .CreditCards_cards___UTKD{
+        margin-top: 20px;
+    }
+    .FooterBodyBlock_title__mwURC{
+        margin-top: 20px;
+    }
+    .FooterTop_top__heUwq .buttonBackToTop{
+      margin-left: 20px;
+    }
+    .Socials_socials__cEmAe{
+      margin-top: 10px;
+    }
+  }

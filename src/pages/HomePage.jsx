@@ -11,7 +11,14 @@ import {setCategoryId,setCurrentPage,setSelectedPageList,setPageCount,setFilters
 import axios from 'axios';
 import qs from 'qs';
 import {Link, useNavigate} from 'react-router-dom';
+import Slider from '../components/Slider';
+import Footer from '../components/Footer';
 export const HomePage = () => {
+  const images = [
+    {src: 'https://cdn.monopizza.com.ua/mp-ua/promotions/0001-kombo-dzhingl-bels-web-uk.png?alt=media&token=3eaed7f7-4afd-45d8-a326-aef97b66dce0}&w=1280&h=500&format=auto&mode=fit&q=60'},
+    {src: 'https://cdn.monopizza.com.ua/mp-ua/promotions/0001-kombo-odin-vdoma-web-uk.png?alt=media&token=ba92bd11-cc46-4c7a-9e39-3dcffdc712b6}&w=1280&h=500&format=auto&mode=fit&q=60'},
+    {src: 'https://cdn.monopizza.com.ua/mp-ua/promotions/0001-korisna-pica-isnuye-i-ce-monopica-web-uk.png?alt=media&token=d32b5754-630a-432b-8622-85ea7ad5a43d}&w=1280&h=500&format=auto&mode=fit&q=60'}
+  ];
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
@@ -123,6 +130,7 @@ export const HomePage = () => {
       dispatch(setSelectedPageList(selectedPage));
     };
   return (
+    <>
     <div className='container'>
         <div className="content__top">
             <Categories value = {selectedCategoryId} onClickCategory={(id)=>{
@@ -138,6 +146,7 @@ export const HomePage = () => {
             }}></Categories>
             <Sort></Sort>
           </div>
+          <Slider images={images}></Slider>
           <h2 className="content__title">Меню</h2>
           <div className={notFound?'content__items-notFound':'content__items'}>
           {
@@ -153,5 +162,7 @@ export const HomePage = () => {
         <Pagination onChangePage={handlePageChange} pageCount={pageCount} selectedPage={selectedPageList}></Pagination>
         )}
     </div>
+    <Footer></Footer>
+    </>
   )
 }

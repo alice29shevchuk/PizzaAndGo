@@ -3,6 +3,7 @@ import React from 'react';
 import {useParams,useNavigate} from 'react-router-dom';
 import {addProduct,cartSelector,updateSelectedIngredients,updateExcludedIngredients,updateSelectedSauce} from '../redux/slices/cartSlice';
 import {useSelector,useDispatch} from 'react-redux';
+import Footer from '../components/Footer';
 export const PizzaInfo = () => {
     const {id} = useParams();
     const navigate = useNavigate();
@@ -83,9 +84,20 @@ export const PizzaInfo = () => {
     };
     
     if(!pizza){
-        return 'Загрузка...';
+      return(
+          <div className={`loading-container ${!pizza ? 'loading' : ''}`}>{!pizza ? (
+            <div className="loader">
+              <svg className="circular" viewBox="25 25 50 50">
+                <circle className="path" cx="50" cy="50" r="20" fill="none" strokeWidth="2" strokeMiterlimit="10" />
+              </svg>
+            </div>
+          ) : (
+            'Завантажено!'
+          )}</div>
+      );
     }
     return (
+      <>
         <div className="pizza-info">
         <div>
         <h2>{pizza.title}</h2>
@@ -142,5 +154,7 @@ export const PizzaInfo = () => {
           </div> 
         </div>       
     </div>
+    <Footer></Footer>
+    </>
   )
 }

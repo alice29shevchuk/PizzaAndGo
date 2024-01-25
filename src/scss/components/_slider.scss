@@ -1,0 +1,21 @@
+.carousel {
+    max-width: 100%;
+    margin: 0px auto;
+    overflow: hidden; 
+  }
+  .carousel-container{
+    margin-top: 40px;
+    position: relative; /* Добавьте позицию относительно, чтобы z-index работал */
+    z-index: 1; 
+  }
+    .carousel .slide {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+    .carousel img {
+    max-width: 100%;
+    max-height: 100%; 
+    border-radius: 5px;
+  }
+  
