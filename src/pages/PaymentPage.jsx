@@ -10,6 +10,7 @@ import { v4 as uuidv4 } from 'uuid';
 import TimePicker from 'react-time-picker';
 import 'react-time-picker/dist/TimePicker.css';
 import Footer from '../components/Footer';
+import CityDepartmentModal from '../components/CityDepartmentModal';
 
 export const PaymentPage = () => {
   const navigate = useNavigate();
@@ -23,7 +24,7 @@ export const PaymentPage = () => {
   const [orderNumber, setOrderNumber] = React.useState('');
   const idUser = JSON.parse(sessionStorage.getItem('user')).uid;/////////////////////////
   const [orderTime,setOrderTime] = React.useState(getDefaultTime());
-
+  const [modalIsOpen, setModalIsOpen] = React.useState(false);
   //
   //time
   //
@@ -152,6 +153,9 @@ export const PaymentPage = () => {
           </option>
         ))}
         </select>
+        <br></br>
+        <button onClick={() => setModalIsOpen(true)} className='button'>Выбрать город</button>
+        <CityDepartmentModal isOpen={modalIsOpen} onRequestClose={() => setModalIsOpen(false)} />
         <h4>Комментарий к заказу</h4>
         <textarea value={comment} onChange={(e) => setComment(e.target.value)} maxLength={100} className="payment-input-comment"/>
       </div>

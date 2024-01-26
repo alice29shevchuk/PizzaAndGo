@@ -46,7 +46,7 @@ function Header()
       {location.pathname !== '/basket' && location.pathname !== '/order' && location.pathname !== '/payment' && location.pathname !== '/user-profile' && <Search className="header__search" />}
       <div className="header__cart">
       {
-        location.pathname!=='/basket' && location.pathname !== '/order' && location.pathname !== '/user-profile' &&
+        location.pathname!=='/basket' && location.pathname !== '/order' && location.pathname !== '/user-profile' && location.pathname !== '/payment' &&
         <Link to="/basket" className="button button--cart">
           <span>{totalPrice} грн</span>
           <div className="button__delimiter"></div>

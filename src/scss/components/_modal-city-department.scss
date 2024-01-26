@@ -1,0 +1,67 @@
+@import '../variables';
+.modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 80%;
+  max-width: 800px;
+  height: 400px;
+
+  background-color: white;
+  box-shadow: 0 0 10px $orange;
+  border-radius: 10px; 
+
+  .header {
+    text-align: center;
+    padding: 20px;
+    border-bottom: 2px solid $orange; 
+
+    h2 {
+      font-size: 24px; 
+      font-weight: bold;
+      text-align: center;
+      color: $orange; 
+    }
+  }
+
+  .content {
+    padding: 20px;
+
+    .city,
+    .department {
+      margin-bottom: 15px;
+      padding: 10px; 
+      border: 1px solid #ddd; 
+      border-radius: 5px; 
+    }
+  }
+
+  .footer {
+    padding: 20px;
+    border-top: 2px solid $orange;
+    text-align: right;
+    display: flex;
+    justify-content: space-between;
+
+    .closeButton{
+        background-color: red;
+    }
+    .closeButton:hover{
+        background-color: darken(red, 10%);
+    }
+    button {
+      width: max-content;
+      background-color: green;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 55px;
+      cursor: pointer;
+
+      &:hover {
+        background-color: darken(green, 10%);
+      }
+    }
+  }
+}
