@@ -10,6 +10,11 @@ namespace Pizza_And_Go_API.Managers
 		{
 			this.context = new ApplicationContext();
 		}
+
+		protected void SaveChanges()
+		{
+			this.context.SaveChanges();
+		}
 	}
 }
 

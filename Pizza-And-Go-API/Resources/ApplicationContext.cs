@@ -10,6 +10,9 @@ namespace Pizza_And_Go_API.Resources
         public DbSet<Category> Categories { get; set; }
         public DbSet<IngredientsAddItem> IngredientsAddItems { get; set; }
         public DbSet<Ingredient> Ingredient { get; set; }
+        public DbSet<IngredientsExcept> IngredientsExcept { get; set; }
+        public DbSet<City> City { get; set; }
+        public DbSet<Department> Department { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -26,6 +29,8 @@ namespace Pizza_And_Go_API.Resources
             modelBuilder.Entity<IngredientsAddItem>().HasKey(c => c.id);
             modelBuilder.Entity<IngredientsExcept>().HasKey(c => c.id);
             modelBuilder.Entity<Ingredient>().HasKey(c => c.Id);
+            modelBuilder.Entity<City>().HasKey(c => c.ID);
+            modelBuilder.Entity<Department>().HasKey(c => c.ID);
 
             base.OnModelCreating(modelBuilder);
         }

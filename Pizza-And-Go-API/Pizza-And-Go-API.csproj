@@ -26,11 +26,13 @@
     <None Remove="Models\" />
     <None Remove="Resources\" />
     <None Remove="Managers\" />
+    <None Remove="Controllers\AdminControllers\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Controllers\" />
     <Folder Include="Models\" />
     <Folder Include="Resources\" />
     <Folder Include="Managers\" />
+    <Folder Include="Controllers\AdminControllers\" />
   </ItemGroup>
 </Project>

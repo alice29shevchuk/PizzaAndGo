@@ -12,10 +12,6 @@ namespace Pizza_And_Go_API.Models
         public int Id { get; set; }
         public string name { get; set; }
         public int PizzaId { get; set; }
-
-        public Ingredient()
-		{
-		}
 	}
 }
 

@@ -5,10 +5,7 @@ namespace Pizza_And_Go_API.Models
 	{
         public int id { get; set; }
         public string name { get; set; }
-
-        public IngredientsExcept()
-		{
-		}
+		public int PizzaId { get; set; }
 	}
 }
 
