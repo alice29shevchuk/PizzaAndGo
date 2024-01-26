@@ -11,6 +11,8 @@ import TimePicker from 'react-time-picker';
 import 'react-time-picker/dist/TimePicker.css';
 import Footer from '../components/Footer';
 import CityDepartmentModal from '../components/CityDepartmentModal';
+import {clearCity} from '../redux/slices/citySlice';
+import {clearDepartment} from '../redux/slices/departmentSlice';
 
 export const PaymentPage = () => {
   const navigate = useNavigate();
@@ -25,6 +27,10 @@ export const PaymentPage = () => {
   const idUser = JSON.parse(sessionStorage.getItem('user')).uid;/////////////////////////
   const [orderTime,setOrderTime] = React.useState(getDefaultTime());
   const [modalIsOpen, setModalIsOpen] = React.useState(false);
+  const [selectedCityName, setSelectedCityName] = React.useState("");
+  const [selectedDepartmentName, setSelectedDepartmentName] = React.useState("");
+  const {cities,selectedCityId} = useSelector((state) => state.city);
+  const {departments,selectedDepartment} = useSelector((state) => state.department);
   //
   //time
   //
@@ -64,6 +70,12 @@ export const PaymentPage = () => {
     setOrderTime(savedOrder.orderData || getDefaultTime());
   }, []);
   useEffect(() => {
+    const savedCity = localStorage.getItem('selectedCity');
+    const savedDepartment = localStorage.getItem('selectedDepartment');
+    setSelectedCityName(savedCity || ""); // Use a default value if not found
+    setSelectedDepartmentName(savedDepartment || "");
+  }, []);
+  useEffect(() => {
     const order = {
       number:orderNumber,
       id:idUser,
@@ -83,10 +95,12 @@ export const PaymentPage = () => {
       comment:comment,
       paymentMethod:paymentMethod,
       orderData:orderTime,
+      city: selectedCityName,
+      department:selectedDepartmentName,
     };
     dispatch(setOrder(order));
     sessionStorage.setItem('order',JSON.stringify(order));///////////////////////////////////
-  }, [phone, comment, items, totalPrice, dispatch, name, email,paymentMethod,orderTime]);
+  }, [phone, comment, items, totalPrice, dispatch, name, email,paymentMethod,orderTime,selectedCityName,selectedDepartmentName]);
   useEffect(() => {
     const generatedOrderNumber = uuidv4();
     setOrderNumber(generatedOrderNumber);
@@ -146,7 +160,7 @@ export const PaymentPage = () => {
               </label>
             </div>
         <br />
-        <select id="timePicker" className="custom-select" name="timePicker" value={orderTime} onChange={handleTimeChange}>
+        <select id="timePicker" name="timePicker" value={orderTime} onChange={handleTimeChange}>
         {timeOptions.map((time, index) => (
           <option key={index} value={time}>
             {time}
@@ -154,8 +168,18 @@ export const PaymentPage = () => {
         ))}
         </select>
         <br></br>
-        <button onClick={() => setModalIsOpen(true)} className='button'>Выбрать город</button>
-        <CityDepartmentModal isOpen={modalIsOpen} onRequestClose={() => setModalIsOpen(false)} />
+        <button onClick={() => setModalIsOpen(true)} className='chooseCityButton'>Выбрать город</button>
+        <CityDepartmentModal isOpen={modalIsOpen} onRequestClose={() => {setModalIsOpen(false);dispatch(clearCity());dispatch(clearDepartment())}} onUpdateAddress={() => {
+                      const selectedCity = cities.find((city) => city.id === selectedCityId);
+                      const cityName = selectedCity ? selectedCity.name : "Unknown city";
+                      setSelectedCityName(cityName);
+                      const selectedDep = departments.find((department) => department.id === selectedDepartment);
+                      const departmentName = selectedDep ? selectedDep.name : "Unknown department";
+                      setSelectedDepartmentName(departmentName);
+                      localStorage.setItem('selectedCity', cityName);
+                      localStorage.setItem('selectedDepartment', departmentName);
+                      setModalIsOpen(false);
+            }} />
         <h4>Комментарий к заказу</h4>
         <textarea value={comment} onChange={(e) => setComment(e.target.value)} maxLength={100} className="payment-input-comment"/>
       </div>

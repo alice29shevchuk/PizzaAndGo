@@ -25,6 +25,7 @@ export const Order = () => {
                 {product.selectedSauce!="" && <p>{product.selectedSauce}</p>}
             </div>
         ))}
+        <p>г. {order.city} ({order.department})</p>
         <p className='total-price'>Сумма к оплате в магазине: <span>{order.totalPrice} грн</span></p>
     </div>
     <div className="cart__bottom-buttons">

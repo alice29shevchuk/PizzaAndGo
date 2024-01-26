@@ -1,7 +1,7 @@
 import {createSlice} from '@reduxjs/toolkit';
 const initialState={
     departments:[],
-    selectedDepartment: null,
+    selectedDepartment: 1,
 }
 const departmentSlice = createSlice({
     name:'department',
@@ -14,7 +14,7 @@ const departmentSlice = createSlice({
             state.selectedDepartment = action.payload;
         },
         clearDepartment: (state) => {
-            state.selectedDepartment = null;
+            state.selectedDepartment = 1;
         },
     }
 });

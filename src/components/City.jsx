@@ -24,7 +24,6 @@ export const City = () => {
   }, []);
   const handleCitySelect = (city) => {
     dispatch(selectCity(city));
-    console.log('cityId = ' + city);
   };
   return (
     <div>

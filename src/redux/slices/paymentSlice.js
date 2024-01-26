@@ -12,6 +12,8 @@ const initialState={
         comment:'',
         paymentMethod: '',
         orderData:'',
+        city:'',
+        department:'',
     },
 }
 const paymentSlice = createSlice({

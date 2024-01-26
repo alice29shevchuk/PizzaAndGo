@@ -2,7 +2,14 @@
 
 .payment-container {
   padding: 20px;
-
+   select{
+    width: 49%;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    outline: none;
+   }
   h1 {
     margin-bottom: 20px;
   }
@@ -132,6 +139,20 @@
     }
   }
   .payment-method label {
-    margin-right: 10px; 
+    margin-right: 20px; 
+  }
+  
+  .chooseCityButton{
+    background-color: $orange;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    width: 49%;
   }
 }

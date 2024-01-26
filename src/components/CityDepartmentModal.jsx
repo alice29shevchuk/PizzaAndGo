@@ -1,11 +1,10 @@
 import React, { useState } from 'react';
 import Modal from 'react-modal';
-import { useDispatch, useSelector } from 'react-redux';
 import { City } from './City';
 import { Department } from './Department';
+import { useSelector, useDispatch } from 'react-redux';
 
-const CityDepartmentModal = ({ isOpen, onRequestClose }) => {
-
+const CityDepartmentModal = ({ isOpen, onRequestClose,onUpdateAddress}) => {
   return (
     <Modal isOpen={isOpen} onRequestClose={onRequestClose} className="modal">
       <h2 className='header'>Выберите город и магазин</h2>
@@ -15,7 +14,7 @@ const CityDepartmentModal = ({ isOpen, onRequestClose }) => {
       </div>
       <div className='footer'>
       <button onClick={onRequestClose} className='closeButton'>Закрыть</button>
-      <button>Подтвердить адрес</button>
+      <button onClick={onUpdateAddress}>Подтвердить адрес</button>
       </div>
     </Modal>
   );

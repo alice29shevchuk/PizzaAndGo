@@ -27,6 +27,7 @@
 
   .content {
     padding: 20px;
+    flex: 1;
 
     .city,
     .department {
@@ -64,4 +65,10 @@
       }
     }
   }
+  @media screen and (max-width: 510px) {
+    .footer {
+        margin-top: -28px;
+    }
+  }
 }
+

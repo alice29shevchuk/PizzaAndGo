@@ -36,6 +36,7 @@ export const Department = () => {
          </svg>
        </div>
       ) : (
+        selectedCityId ? (
         <div className='select-container'>
         <h3>Выберите магазин</h3>
         <select onChange={(e) => handleDepartmentSelect(parseInt(e.target.value))} value={departments.name}>
@@ -46,6 +47,9 @@ export const Department = () => {
           ))}
         </select>
       </div>
+      ): (
+      <p>Оберіть місто, щоб вибрати відділення.</p>
+      )
       )}
     </div>
   );
