@@ -107,8 +107,19 @@ export const PaymentPage = () => {
   }, []);
   const handlePhoneChange = (value, data, event, formattedValue) => {
     setIsPhoneValid(value.length==12);
+    // setPhone(formattedValue);
     setPhone(value);
   };
+  const handlePhoneKeyDown = (event) => {
+    if (event.target.value.startsWith('+380') && event.key === '0') {
+      event.preventDefault();
+    }
+    const countryCode = event.target.value;
+    if (countryCode === '+380' && event.key === 'Backspace') {
+      event.preventDefault();
+    }
+  };
+  
   const onToken = (token) => {
     alert('Платеж успешно обработан!');
     navigate('/order');
@@ -134,9 +145,19 @@ export const PaymentPage = () => {
         <input type="text" value={email} readOnly className="payment-input" />
         <br />
         <h4>Телефон</h4>
-        <PhoneInput required={true} country={'ua'} onlyCountries={['ua']}value={phone} onChange={(value, data, event, formattedValue) => {
+        <PhoneInput 
+        required={true} 
+        inputClass="custom-phone-input" 
+        placeholder="+380 (99) 300 15 35" 
+        country={'ua'} 
+        onlyCountries={['ua']} 
+        value={phone}  
+        inputProps={{
+          onKeyDown: (event) => handlePhoneKeyDown(event),
+        }} 
+        onChange={(value, data, event, formattedValue) => {
                 handlePhoneChange(value, data, event, formattedValue);
-              }}/>
+        }}/>
         <br />
         <div className="payment-method">
               <h4>Выберите способ оплаты</h4>
@@ -214,9 +235,9 @@ export const PaymentPage = () => {
         </div>
         {paymentMethod === 'card' && (
               <StripeCheckout
+                label='Оплатить картой'
                 token={onToken}
-                className={`${isPhoneValid ? 'payment-button ' : 'payment-button-disabled'}`} disabled={!isPhoneValid}
-
+                className={`${isPhoneValid ? 'payment-button-card ' : 'payment-button-card-disabled'}`} //disabled={!isPhoneValid}
                 stripeKey="pk_test_51OaFvPBBmu82HAlB4dh6Kc8i9RC4oE0Q4H5SBnWdXKtbH3xnqQpeBoOeiZdLgtjHFePZRctazLqIOCht8oX1jrKO00WqWHsqMu"
                 amount={totalPrice * 100}
                 name="Pizza and Go"

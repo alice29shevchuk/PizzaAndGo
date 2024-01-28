@@ -23,31 +23,9 @@ function PizzaCard({id,title,price,imageUrl,weight,types}){
             alt="Pizza"
             />
         <h4 className="pizza-block__title">{title}</h4>
-        {/* <div className="pizza-block__selector">
-          <ul>
-            {
-                types.map((type)=>(
-                    <li 
-                    key={type}
-                    onClick={()=>setActiveDoughType(type)} 
-                    className={activeDoughType===type?'active':''}
-                    >{type=='0'?doughType[0]:doughType[1]}</li>
-                ))
-            }
-          </ul>
-          <ul>
-            {sizes.map((size,i)=>(
-                <li 
-                key={size}
-                onClick={()=>setActiveSize(i)} 
-                className={activeSize===i?'active':''}>{size} см.</li>
-            ))}
-          </ul>
-        </div> */}
         <div className="pizza-block__bottom">
           <div className="pizza-block__price">{price} грн</div>
           <Link to={`/pizza/${id}`}>
-          {/* onClick={onClickAdd} */}
           <button className="button button--outline button--add">
             <svg
               width="12"
@@ -62,7 +40,6 @@ function PizzaCard({id,title,price,imageUrl,weight,types}){
               />
             </svg>
             <span>Детальнее</span>
-            {/* {cartProductCount>0 &&<i>{cartProductCount}</i>} */}
             {cartProductCount>0 && <i>{totalCount}</i>}
           </button>
           </Link>

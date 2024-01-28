@@ -10,6 +10,15 @@
     border-radius: 5px;
     outline: none;
    }
+  .form-control.custom-phone-input{
+    width: 49%;
+    
+    @media (max-width: 575px) {
+      width: 100%;
+      margin-bottom: 5px;
+    }
+  } 
+
   h1 {
     margin-bottom: 20px;
   }
@@ -98,8 +107,41 @@
       }
     }
   }
+  .payment-button-card {
+    background: $orange !important;
+    cursor: pointer !important;
+    width: 100%;
+    border-radius: 20px !important;
+    padding: 5px 20px !important; 
+  }
+  
+  .payment-button-card span {
+    background-image: linear-gradient($orange, $orange) !important;
+    box-shadow: none !important;
+    font-weight: normal !important;
+    font-size: 14px !important;
+    font-family: Verdana, Geneva, Tahoma, sans-serif !important;
+  }
 
+  .payment-button-card-disabled {
+    width: 100% !important;
+    background: $orange !important;
+    color: white;
+    padding: 5px 20px !important; 
+    font-size: 14px !important;
+    border-radius: 20px !important;
+    opacity: 0.5 !important;
+    cursor: not-allowed !important;
+  }
+  .payment-button-card-disabled span {
+    background-image: linear-gradient($orange, $orange) !important;
+    box-shadow: none !important;
+    font-weight: normal !important;
+    font-size: 14px !important;
+    font-family: Verdana, Geneva, Tahoma, sans-serif !important;
+  }
   .payment-button {
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
     background-color: $orange;
     color: white;
     padding: 10px 20px;
@@ -109,7 +151,6 @@
     cursor: pointer;
     width: 100%;
   }
-
   .payment-button-disabled:disabled {
     background-color: $orange;
     color: white;
