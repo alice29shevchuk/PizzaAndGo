@@ -1,6 +1,7 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore;
 using Pizza_And_Go_API.Models;
+using Pizza_And_Go_API.Models.Order;
 
 namespace Pizza_And_Go_API.Resources
 {
@@ -13,6 +14,16 @@ namespace Pizza_And_Go_API.Resources
         public DbSet<IngredientsExcept> IngredientsExcept { get; set; }
         public DbSet<City> City { get; set; }
         public DbSet<Department> Department { get; set; }
+        public DbSet<Beverages> Beverages { get; set; }
+        public DbSet<Souces> Souces { get; set; }
+        //
+        //  Order
+        //
+        public DbSet<SelectedIngredient> SelectedIngredient { get; set; }
+        public DbSet<ProductsInOrders> ProductsInOrders { get; set; }
+        public DbSet<ExcludedIngredients> ExcludedIngredients { get; set; }
+        public DbSet<Orders> Orders { get; set; }
+
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -31,6 +42,10 @@ namespace Pizza_And_Go_API.Resources
             modelBuilder.Entity<Ingredient>().HasKey(c => c.Id);
             modelBuilder.Entity<City>().HasKey(c => c.ID);
             modelBuilder.Entity<Department>().HasKey(c => c.ID);
+            modelBuilder.Entity<SelectedIngredient>().HasKey(c => c.Id);
+            modelBuilder.Entity<ProductsInOrders>().HasKey(c => c.Id);
+            modelBuilder.Entity<ExcludedIngredients>().HasKey(c => c.Id);
+            modelBuilder.Entity<Orders>().HasKey(c => c.id);
 
             base.OnModelCreating(modelBuilder);
         }

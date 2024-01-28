@@ -8,10 +8,10 @@ namespace Pizza_And_Go_API.Controllers.AdminControllers
     [ApiController]
     [Route("api/Pizza")]
     public class AdminPizzaController
-	{
+    {
         private PizzaManager manager;
         public AdminPizzaController()
-		{
+        {
             this.manager = new PizzaManager();
         }
 

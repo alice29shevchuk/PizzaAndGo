@@ -35,18 +35,27 @@ namespace Pizza_And_Go_API.Managers
             return tempPizzas;
         }
 
-        public List<Pizza> SearchPizzas(int? idCategory, string? sortBy, string? order, string? searchText)
+        public List<Pizza> GetPopularPizzas()
         {
-            List<Pizza> results = new List<Pizza>();
+            return this.context.Pizzas.Where(x => x.isPopular.Equals(true)).ToList();
+        }
+
+        public object SearchPizzas(int? idCategory, string? sortBy, string? order, string? searchText)
+        {
+            List<Pizza> pizzaResults = new List<Pizza>();
+            List<Souces> soucesResults = new List<Souces>();
+            List<Beverages> beveragesResults = new List<Beverages>();
 
             if (searchText != null && searchText.Length > 0)
             {
-                results = this.context.Pizzas.Where(x => x.title.ToLower().Contains(searchText.ToLower())).ToList();
+                pizzaResults = this.context.Pizzas.Where(x => x.title.ToLower().Contains(searchText.ToLower())).ToList();
+                soucesResults = this.context.Souces.Where(x => x.Name.ToLower().Contains(searchText.ToLower())).ToList();
+                beveragesResults = this.context.Beverages.Where(x => x.Name.ToLower().Contains(searchText.ToLower())).ToList();
 
             }
             if (idCategory != null)
             {
-                results = this.context.Pizzas.Where(x => x.category.Equals(idCategory)).ToList();
+                pizzaResults = this.context.Pizzas.Where(x => x.category.Equals(idCategory)).ToList();
             }
 
             if (sortBy != null)
@@ -57,39 +66,59 @@ namespace Pizza_And_Go_API.Managers
                     {
                         if (sortBy == "price")
                         {
-                            results = results.OrderBy(x => x.price).ToList();
+                            pizzaResults = pizzaResults.OrderBy(x => x.price).ToList();
+                            soucesResults = soucesResults.OrderBy(x => x.Price).ToList();
+                            beveragesResults = beveragesResults.OrderBy(x => x.Price).ToList();
                         }
 
                         if (sortBy == "rating")
                         {
-                            results = results.OrderBy(x => x.rating).ToList();
+                            pizzaResults = pizzaResults.OrderBy(x => x.rating).ToList();
                         }
 
                         if (sortBy == "title")
                         {
-                            results = results.OrderBy(x => x.title).ToList();
+                            pizzaResults = pizzaResults.OrderBy(x => x.title).ToList();
+                            soucesResults = soucesResults.OrderBy(x => x.Name).ToList();
+                            beveragesResults = beveragesResults.OrderBy(x => x.Name).ToList();
                         }
                     }
                     else if (order == "desk")
                     {
                         if (sortBy == "price")
                         {
-                            results = results.OrderByDescending(x => x.price).ToList();
+                            pizzaResults = pizzaResults.OrderByDescending(x => x.price).ToList();
+                            soucesResults = soucesResults.OrderByDescending(x => x.Price).ToList();
+                            beveragesResults = beveragesResults.OrderByDescending(x => x.Price).ToList();
                         }
 
                         if (sortBy == "rating")
                         {
-                            results = results.OrderByDescending(x => x.rating).ToList();
+                            pizzaResults = pizzaResults.OrderByDescending(x => x.rating).ToList();
                         }
 
                         if (sortBy == "title")
                         {
-                            results = results.OrderByDescending(x => x.title).ToList();
+                            pizzaResults = pizzaResults.OrderByDescending(x => x.title).ToList();
+                            soucesResults = soucesResults.OrderByDescending(x => x.Name).ToList();
+                            beveragesResults = beveragesResults.OrderByDescending(x => x.Name).ToList();
                         }
                     }
                 }
             }
-            return results;
+            if(pizzaResults.Count > 0)
+            {
+                return pizzaResults;
+            }
+            if(soucesResults.Count > 0)
+            {
+                return soucesResults;
+            }
+            if(beveragesResults.Count > 0)
+            {
+                return beveragesResults;
+            }
+            return new List<object>();
         }
 
         //

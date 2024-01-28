@@ -14,6 +14,6 @@ namespace Pizza_And_Go_API.Models
         public string sauce { get; set; }
         public List<IngredientsAddItem> ingredientsAdd { get; set; }
         public List<IngredientsExcept> ingredientsExcepts { get; set; }
-	}
+        public bool isPopular { get; set; }
+    }
 }
-

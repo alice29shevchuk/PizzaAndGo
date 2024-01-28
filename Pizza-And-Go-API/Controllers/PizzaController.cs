@@ -24,8 +24,15 @@ namespace Pizza_And_Go_API.Controllers
 		}
 
 		[HttpGet]
+		[Route("GetPopularPizzas")]
+		public List<Pizza> GetPopularPizzas()
+		{
+			return this.manager.GetPopularPizzas();
+		}
+
+        [HttpGet]
 		[Route("Search")]
-		public List<Pizza> Saerch(int? idCategory, string? sortBy, string? order, string? searchText)
+		public object Saerch(int? idCategory, string? sortBy, string? order, string? searchText)
 		{
 			return this.manager.SearchPizzas(idCategory, sortBy, order, searchText);
 		}
