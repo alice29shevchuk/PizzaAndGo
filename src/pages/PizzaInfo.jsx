@@ -20,7 +20,7 @@ export const PizzaInfo = () => {
     React.useEffect(()=>{
         async function fetchPizzas(){
             try{
-                const {data} = await axios.get('https://6589685a324d41715258e658.mockapi.io/pizzas/'+id);
+                const {data} = await axios.get(`http://alisa000077-001-site1.htempurl.com/api/Pizza/GetPizzaByID?idPizza=${id}`);
                 setPizza(data);
             }catch(error){
                 alert('Smth was wrong :(');
@@ -46,11 +46,13 @@ export const PizzaInfo = () => {
         setExcludedIngredients((prevIngredients) =>
           prevIngredients.filter((item) => item !== ingredient)
         );
-        dispatch(updateExcludedIngredients(excludedIngredients));
+        console.log(excludedIngredients);
+        dispatch(updateExcludedIngredients(excludedIngredients,ingredient));
 
       } 
       else {
         setExcludedIngredients((prevIngredients) => [...prevIngredients, ingredient]);
+        console.log(excludedIngredients);
         dispatch(updateExcludedIngredients(excludedIngredients));
 
       }
@@ -102,7 +104,7 @@ export const PizzaInfo = () => {
         <div>
         <h2>{pizza.title}</h2>
           <img src={pizza.imageUrl} alt="Pizza" />
-          <p>{pizza.ingredients.join(', ')}</p>
+          <p>{pizza.ingredients.map((ingredient) => ingredient.name).join(', ')}</p>
           <div>
             <h5>Соус:</h5>
             <label>
@@ -113,7 +115,7 @@ export const PizzaInfo = () => {
           <div>
             <h5>Добавить ингредиенты:</h5>
             {pizza.ingredientsAdd.map((ingredient) => (
-              <div key={ingredient.name}>
+              <div key={ingredient.id}>
                 <label>
                   <input type="checkbox" onChange={() => handleIngredientChange(ingredient.name, ingredient.price)}
                   checked={selectedIngredients.includes(ingredient.name)}/>
@@ -124,12 +126,12 @@ export const PizzaInfo = () => {
           </div>
           <div>
             <h5>Исключить ингредиенты:</h5>
-            {pizza.ingredientsExcept.map((ingredient) => (
-              <div key={ingredient}>
+            {pizza.ingredientsExcepts.map((ingredient) => (
+              <div key={ingredient.id}>
                 <label>
-                  <input type="checkbox" onChange={() => handleExcludeIngredientChange(ingredient)}
-                  checked={excludedIngredients.includes(ingredient)} />
-                  {`${ingredient}`}
+                  <input type="checkbox" onChange={() => handleExcludeIngredientChange(ingredient.name)}
+                  checked={excludedIngredients.includes(ingredient.name)} />
+                  {`${ingredient.name}`}
                 </label>
               </div>
             ))}

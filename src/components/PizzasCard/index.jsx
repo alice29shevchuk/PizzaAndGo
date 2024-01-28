@@ -8,7 +8,7 @@ const doughType = ['тонкое','обычное'];
 
 function PizzaCard({id,title,price,imageUrl,weight,types}){
     const dispatch=useDispatch();
-    const[activeDoughType,setActiveDoughType] = useState(types[0]);
+    // const[activeDoughType,setActiveDoughType] = useState(types[0]);
     const[activeSize,setActiveSize] = useState(0);
     const {items} = useSelector(cartSelector);
     const totalCount = items.reduce((sum,item)=>sum+item.count,0);

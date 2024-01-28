@@ -7,11 +7,12 @@
   padding: 10px;
   padding-bottom: 20px;
   border: 2px solid lighten($orange, 20%) ;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
   border-radius: 20px;
   transition: all 0.2s ease-in-out;
   &:hover {
     transform: scale(1.03);
+    box-shadow: 0 0 10px $orange;
   }
 
   &-wrapper {
