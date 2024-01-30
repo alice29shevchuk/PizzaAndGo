@@ -26,7 +26,8 @@ export const HomePage = () => {
     const [isLoading,setIsLoading] = React.useState(true);
 
     const {searchValue}=React.useContext(SearchContext);
-    const search = searchValue?`&search=${searchValue}`:'';
+    // const search = searchValue?`&search=${searchValue}`:'';
+    const search = searchValue?`&searchText=${searchValue}`:'';
 
     const {selectedCategoryId, selectedSortList, currentPage, selectedPageList, pageCount} = useSelector((state)=>state.filter);
 
@@ -101,11 +102,11 @@ export const HomePage = () => {
 
     React.useEffect(()=>{
         setIsLoading(true);
-        axios.get('http://alisa000077-001-site1.htempurl.com/api/Pizza/GetPizzas')
-        // axios.get('https://6589685a324d41715258e658.mockapi.io/pizzas')
+        // axios.get('http://alisa000077-001-site1.htempurl.com/api/Pizza/GetPizzas')
+        axios.get(`http://alisa000077-001-site1.htempurl.com/api/Pizza/Search?${selectedCategoryId>0? `idCategory=${selectedCategoryId}`:''}&sortBy=${selectedSortList.sortBy.replace('-','')}&order=${selectedSortList.sortBy.includes('-')?'desc':'asc'}${search}`)
         //axios.get(`https://6589685a324d41715258e658.mockapi.io/pizzas?page=${currentPage}&${selectedCategoryId>0? `category=${selectedCategoryId}`:''}&sortBy=${selectedSortList.sortBy.replace('-','')}&order=${selectedSortList.sortBy.includes('-')?'desc':'asc'}${search}`)
         .then((response)=>{
-          if (!response.data) {
+          if (response.data.length==0) {
             throw new Error(`Network response was not ok: ${response.statusText}`);
           }
           else{

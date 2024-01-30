@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import {setDepartments,selectDepartment } from '../redux/slices/departmentSlice';
 import { useDispatch,useSelector } from 'react-redux';
-export const Department = () => {
+export const Department = ({ onSelectDepartment }) => {
   const [departments, setDepartment] = useState([]);
   const [loading, setLoading] = useState(true);
   const dispatch = useDispatch();
@@ -13,6 +13,7 @@ export const Department = () => {
       try {
         const response = await axios.get(`http://alisa000077-001-site1.htempurl.com/api/Department/GetDepartmentByID?id=${selectedCityId}`); 
         setDepartment(response.data);
+        // console.log(response.data);
         dispatch(setDepartments(response.data));
         setLoading(false);
       } catch (error) {
@@ -26,6 +27,8 @@ export const Department = () => {
 
   const handleDepartmentSelect = (department) => {
     dispatch(selectDepartment(department));
+    const selectedDepartment = departments.find(x => x.id === parseInt(department));
+    onSelectDepartment && onSelectDepartment(selectedDepartment);
   };
   return (
     <div>
