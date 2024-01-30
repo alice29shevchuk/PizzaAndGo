@@ -13,6 +13,7 @@ import Footer from '../components/Footer';
 import CityDepartmentModal from '../components/CityDepartmentModal';
 import {clearCity} from '../redux/slices/citySlice';
 import {clearDepartment} from '../redux/slices/departmentSlice';
+import axios from 'axios';
 
 export const PaymentPage = () => {
   const navigate = useNavigate();
@@ -127,6 +128,90 @@ export const PaymentPage = () => {
   const handlePayment = () => {
     navigate('/order');
     dispatch(clearProducts());
+    try{
+    const savedOrder = JSON.parse(sessionStorage.getItem('order')) || {};
+    const productsInOrders = savedOrder.products.map(product => ({
+      id: product.id,
+      title: product.title,
+      selectedIngredients: product.selectedIngredients.map((ingredient, index) => ({
+        id: index + 1, 
+        title: ingredient,
+        productsInOrdersId: 0,
+      })),
+      excludedIngredients: product.excludedIngredients.map((ingredient, index) => ({
+        id: index+1,
+        title: ingredient,
+        productsInOrdersId: 0,
+      })),
+      selectedSauce: product.selectedSauce,
+      price: product.price,
+      count: product.count,
+      ordersid: 0,
+    }));
+    const orderDataToDB = {
+      id: 0,
+      numberOfOrder: savedOrder.number,
+      idUser: savedOrder.id,
+      name: savedOrder.name,
+      email: savedOrder.email,
+      phoneNumber: savedOrder.phoneNumber,
+      productsInOrders: productsInOrders,
+      totalPrice: savedOrder.totalPrice,
+      comment: savedOrder.comment,
+      paymentMethod: savedOrder.paymentMethod,
+      orderData: savedOrder.orderData,
+      city: savedOrder.city,
+      department: savedOrder.department
+    };
+const data = {
+  "id": orderDataToDB.id,
+  "numberOfOrder": orderDataToDB.numberOfOrder,
+  "idUser": orderDataToDB.idUser,
+  "name": orderDataToDB.name,
+  "email": orderDataToDB.email,
+  "phoneNumber": orderDataToDB.phoneNumber,
+  "productsInOrders": orderDataToDB.productsInOrders.map(product => ({
+    "id": 0, 
+    "title": String(product.title),
+    "selectedIngredients": product.selectedIngredients.map(ingredient => ({
+      "id": 0, 
+      "title": String(ingredient.title), 
+      "productsInOrdersId": 0
+    })),
+    "excludedIngredients": product.excludedIngredients.map(ingredient => ({
+      "id": 0, 
+      "title": String(ingredient.title), 
+      "productsInOrdersId": 0 
+    })),
+    "selectedSauce": String(product.selectedSauce), 
+    "price": Number(product.price), 
+    "count": Number(product.count), 
+    "ordersid": 0 
+  })),
+  "totalPrice": orderDataToDB.totalPrice,
+  "comment": orderDataToDB.comment,
+  "paymentMethod": orderDataToDB.paymentMethod,
+  "orderData": orderDataToDB.orderData,
+  "city": orderDataToDB.city,
+  "department": orderDataToDB.department
+};
+
+  const headers = {
+    'Accept': '*/*',
+    'Content-Type': 'application/json'
+  };
+  
+  axios.post('http://alisa000077-001-site1.htempurl.com/api/Order/AddOrder', JSON.stringify(data), { headers })
+    .then(response => {
+      console.log('Успешный ответ:', response.data);
+    })
+    .catch(error => {
+      console.error('Ошибка:', error);
+    });
+    } catch (error) {
+      console.error('An error occurred:', error);
+      alert('Произошла ошибка. Попробуйте позже.');
+    }
   };
   const handlePaymentMethodChange=(event)=>{
     setPaymentMethod(event.target.value);
