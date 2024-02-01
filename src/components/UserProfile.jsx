@@ -99,9 +99,12 @@ export const UserProfile = () => {
       alert('Ошибка при обновлении профиля:(');
     }
   };
-  const handleOrderHistory=()=>{
+    const handleOrderHistory=()=>{
       navigate('/order-history');
-  }
+    };
+    const handleCurrentOrder=()=>{
+    navigate('/current-order');
+    };
     const handleForgotPassword = async () => {
         try {
             const current = getAuth().currentUser;
@@ -137,6 +140,7 @@ export const UserProfile = () => {
           <p className="profile-info">
           <strong>Пароль:</strong> *******
           </p>
+          <button className="button" onClick={handleCurrentOrder}>Текущие заказы</button>
           <button className="button" onClick={handleOrderHistory}>История заказов</button>
         </div>
   

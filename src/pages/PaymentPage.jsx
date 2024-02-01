@@ -32,6 +32,7 @@ export const PaymentPage = () => {
   const [selectedDepartmentName, setSelectedDepartmentName] = React.useState("");
   const {cities,selectedCityId} = useSelector((state) => state.city);
   const {departments,selectedDepartment} = useSelector((state) => state.department);
+
   //
   //time
   //
@@ -69,12 +70,14 @@ export const PaymentPage = () => {
     setPaymentMethod(savedOrder.paymentMethod || 'cash');
     setIsPhoneValid(savedOrder.phoneNumber && savedOrder.phoneNumber.length === 12);
     setOrderTime(savedOrder.orderData || getDefaultTime());
+    setModalIsOpen(false);
   }, []);
   useEffect(() => {
     const savedCity = localStorage.getItem('selectedCity');
     const savedDepartment = localStorage.getItem('selectedDepartment');
     setSelectedCityName(savedCity || ""); // Use a default value if not found
     setSelectedDepartmentName(savedDepartment || "");
+    setModalIsOpen(false);
   }, []);
   useEffect(() => {
     const order = {
@@ -101,7 +104,7 @@ export const PaymentPage = () => {
     };
     dispatch(setOrder(order));
     sessionStorage.setItem('order',JSON.stringify(order));///////////////////////////////////
-  }, [phone, comment, items, totalPrice, dispatch, name, email,paymentMethod,orderTime,selectedCityName,selectedDepartmentName]);
+  }, [phone, comment, items, totalPrice, dispatch, name, email,paymentMethod,orderTime,selectedCityName,selectedDepartmentName,modalIsOpen]);
   useEffect(() => {
     const generatedOrderNumber = uuidv4();
     setOrderNumber(generatedOrderNumber);
@@ -112,7 +115,7 @@ export const PaymentPage = () => {
     setPhone(value);
   };
   const handlePhoneKeyDown = (event) => {
-    if (event.target.value.startsWith('+380') && event.key === '0') {
+    if (event.target.value === '+380' && event.key === '0') {
       event.preventDefault();
     }
     const countryCode = event.target.value;
@@ -126,91 +129,96 @@ export const PaymentPage = () => {
     navigate('/order');
   };
   const handlePayment = () => {
-    navigate('/order');
-    dispatch(clearProducts());
-    try{
-    const savedOrder = JSON.parse(sessionStorage.getItem('order')) || {};
-    const productsInOrders = savedOrder.products.map(product => ({
-      id: product.id,
-      title: product.title,
-      selectedIngredients: product.selectedIngredients.map((ingredient, index) => ({
-        id: index + 1, 
-        title: ingredient,
-        productsInOrdersId: 0,
-      })),
-      excludedIngredients: product.excludedIngredients.map((ingredient, index) => ({
-        id: index+1,
-        title: ingredient,
-        productsInOrdersId: 0,
-      })),
-      selectedSauce: product.selectedSauce,
-      price: product.price,
-      count: product.count,
-      ordersid: 0,
-    }));
-    const orderDataToDB = {
-      id: 0,
-      numberOfOrder: savedOrder.number,
-      idUser: savedOrder.id,
-      name: savedOrder.name,
-      email: savedOrder.email,
-      phoneNumber: savedOrder.phoneNumber,
-      productsInOrders: productsInOrders,
-      totalPrice: savedOrder.totalPrice,
-      comment: savedOrder.comment,
-      paymentMethod: savedOrder.paymentMethod,
-      orderData: savedOrder.orderData,
-      city: savedOrder.city,
-      department: savedOrder.department
-    };
-const data = {
-  "id": orderDataToDB.id,
-  "numberOfOrder": orderDataToDB.numberOfOrder,
-  "idUser": orderDataToDB.idUser,
-  "name": orderDataToDB.name,
-  "email": orderDataToDB.email,
-  "phoneNumber": orderDataToDB.phoneNumber,
-  "productsInOrders": orderDataToDB.productsInOrders.map(product => ({
-    "id": 0, 
-    "title": String(product.title),
-    "selectedIngredients": product.selectedIngredients.map(ingredient => ({
+    if(!modalIsOpen){
+      alert('Выберите город!');
+    }else{
+      navigate('/order');
+      dispatch(clearProducts());
+      try{
+      const savedOrder = JSON.parse(sessionStorage.getItem('order')) || {};
+      const productsInOrders = savedOrder.products.map(product => ({
+        id: product.id,
+        title: product.title,
+        selectedIngredients: product.selectedIngredients.map((ingredient, index) => ({
+          id: index + 1, 
+          title: ingredient,
+          productsInOrdersId: 0,
+        })),
+        excludedIngredients: product.excludedIngredients.map((ingredient, index) => ({
+          id: index+1,
+          title: ingredient,
+          productsInOrdersId: 0,
+        })),
+        selectedSauce: product.selectedSauce,
+        price: product.price,
+        count: product.count,
+        ordersid: 0,
+      }));
+      const orderDataToDB = {
+        id: 0,
+        numberOfOrder: savedOrder.number,
+        idUser: savedOrder.id,
+        name: savedOrder.name,
+        email: savedOrder.email,
+        phoneNumber: savedOrder.phoneNumber,
+        productsInOrders: productsInOrders,
+        totalPrice: savedOrder.totalPrice,
+        comment: savedOrder.comment,
+        paymentMethod: savedOrder.paymentMethod,
+        orderData: savedOrder.orderData,
+        city: savedOrder.city,
+        department: savedOrder.department
+      };
+  const data = {
+    "id": orderDataToDB.id,
+    "numberOfOrder": orderDataToDB.numberOfOrder,
+    "idUser": orderDataToDB.idUser,
+    "name": orderDataToDB.name,
+    "email": orderDataToDB.email,
+    "phoneNumber": orderDataToDB.phoneNumber,
+    "productsInOrders": orderDataToDB.productsInOrders.map(product => ({
       "id": 0, 
-      "title": String(ingredient.title), 
-      "productsInOrdersId": 0
+      "title": String(product.title),
+      "selectedIngredients": product.selectedIngredients.map(ingredient => ({
+        "id": 0, 
+        "title": String(ingredient.title), 
+        "productsInOrdersId": 0
+      })),
+      "excludedIngredients": product.excludedIngredients.map(ingredient => ({
+        "id": 0, 
+        "title": String(ingredient.title), 
+        "productsInOrdersId": 0 
+      })),
+      "selectedSauce": String(product.selectedSauce), 
+      "price": Number(product.price), 
+      "count": Number(product.count), 
+      "ordersid": 0 
     })),
-    "excludedIngredients": product.excludedIngredients.map(ingredient => ({
-      "id": 0, 
-      "title": String(ingredient.title), 
-      "productsInOrdersId": 0 
-    })),
-    "selectedSauce": String(product.selectedSauce), 
-    "price": Number(product.price), 
-    "count": Number(product.count), 
-    "ordersid": 0 
-  })),
-  "totalPrice": orderDataToDB.totalPrice,
-  "comment": orderDataToDB.comment,
-  "paymentMethod": orderDataToDB.paymentMethod,
-  "orderData": orderDataToDB.orderData,
-  "city": orderDataToDB.city,
-  "department": orderDataToDB.department
-};
-
-  const headers = {
-    'Accept': '*/*',
-    'Content-Type': 'application/json'
+    "totalPrice": orderDataToDB.totalPrice,
+    "comment": orderDataToDB.comment,
+    "paymentMethod": orderDataToDB.paymentMethod,
+    "orderData": orderDataToDB.orderData,
+    "city": orderDataToDB.city,
+    "department": orderDataToDB.department,
+    "isDone": false
   };
   
-  axios.post('http://alisa000077-001-site1.htempurl.com/api/Order/AddOrder', JSON.stringify(data), { headers })
-    .then(response => {
-      console.log('Успешный ответ:', response.data);
-    })
-    .catch(error => {
-      console.error('Ошибка:', error);
-    });
-    } catch (error) {
-      console.error('An error occurred:', error);
-      alert('Произошла ошибка. Попробуйте позже.');
+    const headers = {
+      'Accept': '*/*',
+      'Content-Type': 'application/json'
+    };
+    
+    axios.post('http://alisa000077-001-site1.htempurl.com/api/Order/AddOrder', JSON.stringify(data), { headers })
+      .then(response => {
+        console.log('Успешный ответ:', response.data);
+      })
+      .catch(error => {
+        console.error('Ошибка:', error);
+      });
+      } catch (error) {
+        console.error('An error occurred:', error);
+        alert('Произошла ошибка. Попробуйте позже.');
+      }
     }
   };
   const handlePaymentMethodChange=(event)=>{
@@ -233,7 +241,7 @@ const data = {
         <PhoneInput 
         required={true} 
         inputClass="custom-phone-input" 
-        placeholder="+380 (99) 300 15 35" 
+        placeholder="+380 (99) 999 99 99" 
         country={'ua'} 
         onlyCountries={['ua']} 
         value={phone}  
@@ -280,6 +288,7 @@ const data = {
                       const cityName = selectedCity ? selectedCity.name : "Unknown city";
                       setSelectedCityName(cityName);
                       const selectedDep = departments.find((department) => department.id === selectedDepartment);
+                      console.log(selectedDep);
                       const departmentName = selectedDep ? selectedDep.name : "Unknown department";
                       setSelectedDepartmentName(departmentName);
                       localStorage.setItem('selectedCity', cityName);
@@ -321,7 +330,7 @@ const data = {
         {paymentMethod === 'card' && (
               <StripeCheckout
                 label='Оплатить картой'
-                token={onToken}
+                token={handlePayment}
                 className={`${isPhoneValid ? 'payment-button-card ' : 'payment-button-card-disabled'}`} //disabled={!isPhoneValid}
                 stripeKey="pk_test_51OaFvPBBmu82HAlB4dh6Kc8i9RC4oE0Q4H5SBnWdXKtbH3xnqQpeBoOeiZdLgtjHFePZRctazLqIOCht8oX1jrKO00WqWHsqMu"
                 amount={totalPrice * 100}
@@ -331,7 +340,7 @@ const data = {
                 currency="UAH"
               />
         )}
-        {paymentMethod==='cash' && (
+        {paymentMethod==='cash' &&(
         <button onClick={handlePayment} className={`${isPhoneValid ? 'payment-button ' : 'payment-button-disabled'}`} disabled={!isPhoneValid}>Оплатить</button> 
         )}
       </div>

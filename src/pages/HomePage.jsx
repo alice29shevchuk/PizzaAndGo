@@ -13,6 +13,7 @@ import qs from 'qs';
 import {Link, useNavigate} from 'react-router-dom';
 import Slider from '../components/Slider';
 import Footer from '../components/Footer';
+import { PopularProducts } from '../components/PopularProducts';
 export const HomePage = () => {
   const images = [
     {src: 'https://cdn.monopizza.com.ua/mp-ua/promotions/0001-kombo-dzhingl-bels-web-uk.png?alt=media&token=3eaed7f7-4afd-45d8-a326-aef97b66dce0}&w=1280&h=500&format=auto&mode=fit&q=60'},
@@ -150,6 +151,8 @@ export const HomePage = () => {
             <Sort></Sort>
           </div>
           <Slider images={images}></Slider>
+          <h2 className="content__title">Популярные</h2>
+          <PopularProducts></PopularProducts>
           <h2 className="content__title">Меню</h2>
           <div className={notFound?'content__items-notFound':'content__items'}>
           {

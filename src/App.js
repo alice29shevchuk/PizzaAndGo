@@ -14,6 +14,7 @@ import { UserProfilePage } from './pages/UserProfilePage';
 import {PaymentPage} from './pages/PaymentPage';
 import { OrderPage } from './pages/OrderPage';
 import { OrderHistoryPage } from './pages/OrderHistoryPage';
+import { CurrentOrderPage } from './pages/CurrentOrderPage';
 export const SearchContext = React.createContext('');
 function App() {
   const[searchValue,setSearchValue] = React.useState('');
@@ -33,6 +34,7 @@ function App() {
             <Route path="/payment" element={<PaymentPage/>}></Route>
             <Route path="/order" element={<OrderPage/>}></Route>
             <Route path="/order-history" element={<OrderHistoryPage/>}></Route>
+            <Route path="/current-order" element={<CurrentOrderPage/>}></Route>
             <Route path='*' element={<NotFoundPage/>}></Route>
           </Routes>
       </div>

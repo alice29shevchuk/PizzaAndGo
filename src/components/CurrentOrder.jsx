@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import axios from 'axios';
 import Footer from './Footer';
-const OrderHistory = () => {
+const CurrentOrder = () => {
   const dispatch = useDispatch();
   const iduser = JSON.parse(sessionStorage.getItem('user')).uid;
   const [currentOrderData, setCurrentOrderData] = React.useState(null);
@@ -12,7 +12,7 @@ const OrderHistory = () => {
     const fetchOrderHistory = async () => {
       try {
         console.log(iduser);
-        const response = await axios.get(`http://alisa000077-001-site1.htempurl.com/api/Order/GetOrdersHistory?idUser=${iduser}`);
+        const response = await axios.get(`http://alisa000077-001-site1.htempurl.com/api/Order/GetOrdersNow?idUser=${iduser}`);
         console.log('Order History:', response.data);
         setCurrentOrderData(response.data); 
         setLoading(false);
@@ -25,7 +25,7 @@ const OrderHistory = () => {
   }, []); 
   return (
     <>
-    <h1 className='currentOrders'>История заказов</h1>
+    <h1 className='currentOrders'>Текущие заказы</h1>
     <div className="current-order-container">
     {loading ? (
          <div className="loader">
@@ -44,7 +44,7 @@ const OrderHistory = () => {
         <p><strong>Дата и время заказа: </strong>{orderItem.orderData}</p>
         <p><strong>Город: </strong>{orderItem.city}</p>
         <p><strong>Магазин: </strong>{orderItem.department}</p>
-        <p><strong>Комментарий к заказу: </strong>{orderItem.comment}</p>
+        <p><strong>Комментарий к заказу: </strong>{orderItem.comment===""? 'нет':`${orderItem.comment}`}</p>
         <p><strong>Выбранный способ оплаты: </strong>{orderItem.paymentMethod === 'cash' ? 'Наличными в магазине' : 'Картой на сайте'}</p>
         {orderItem.productsInOrders && orderItem.productsInOrders.map((product) => (
           <div key={product.id} className="product-item">
@@ -55,7 +55,7 @@ const OrderHistory = () => {
             {product.excludedIngredients.length > 0 && (
                 <p className="product-detail">{product.excludedIngredients.map(ingredient => ingredient.title).join(', ')}</p>
             )}
-            <p className="product-detail">Соус: {product.selectedSauce}</p>
+            <p className="product-detail">{product.selectedSauce}</p>
             <p className="product-price">Цена: {product.price} грн</p>
           </div>
         ))}
@@ -71,4 +71,4 @@ const OrderHistory = () => {
   );
 };
 
-export default OrderHistory;
+export default CurrentOrder;

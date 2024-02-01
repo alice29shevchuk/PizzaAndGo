@@ -12,6 +12,9 @@ export const Order = () => {
     }
   }, []);
     const {order}=useSelector((state)=>state.payment);
+    const handleClearOrders=()=>{
+      sessionStorage.removeItem('order');
+    };
     return (
     <div className='container'>
     <div className='order-totaldetails'>
@@ -44,7 +47,7 @@ export const Order = () => {
                   strokeLinejoin="round"></path>
               </svg>
 
-              <span>На Главную</span>
+              <span onClick={handleClearOrders}>На Главную</span>
             </Link>
     </div>
     </div>
