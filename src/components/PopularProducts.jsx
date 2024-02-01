@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { NotFoundCard } from './NotFoundCard';
+import Rating from 'react-rating-stars-component';
 
 export const PopularProducts = () => {
     const [popularProducts, setPopularProducts] = useState([]);
@@ -18,9 +19,13 @@ export const PopularProducts = () => {
   
       fetchPopularProducts();
     }, []); 
-    if(!popularProducts){
+    if(popularProducts.length===0){
      return (
-        <NotFoundCard></NotFoundCard>
+      <div className="loader">
+      <svg className="circular" viewBox="25 25 50 50">
+        <circle className="path" cx="50" cy="50" r="20" fill="none" strokeWidth="2" strokeMiterlimit="10" />
+      </svg>
+    </div>
      );
     }
   return (
@@ -29,9 +34,16 @@ export const PopularProducts = () => {
       {popularProducts.map(product => (
         <div key={product.id} className="product-card">
           <img src={product.imageUrl} alt={product.title} />
+          <span className="label">POPULAR</span>
           <h3>{product.title}</h3>
-          <p>{product.rating}</p>
-        </div>
+          <Rating className="rating"
+              count={10}
+              value={product.rating}
+              size={24}
+              edit={false}
+              activeColor="#ffd700"
+            />
+          </div>
       ))}
     </div>
   </div>

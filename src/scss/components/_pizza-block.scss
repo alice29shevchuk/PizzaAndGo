@@ -6,7 +6,7 @@
   margin-bottom: 65px;
   padding: 10px;
   padding-bottom: 20px;
-  border: 2px solid lighten($orange, 20%) ;
+  border: 1px solid lighten($orange, 20%);
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
   border-radius: 20px;
   transition: all 0.2s ease-in-out;
@@ -66,7 +66,7 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-top: 20px;
+    // margin-top: 20px;
   }
 
   &__price {
@@ -74,5 +74,11 @@
     font-size: 22px;
     line-height: 27px;
     letter-spacing: 0.015em;
+  }
+  .pizzasWeight{
+    background-color: $orange;
+    color: white;
+    border-radius: 20px;
+    padding: 3px;
   }
 }

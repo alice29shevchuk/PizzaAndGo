@@ -58,7 +58,8 @@ export const PizzaInfo = () => {
       }
     };
     const handleSauceChange = () => {
-      setIsSauceChecked(true);
+      // setIsSauceChecked(true);
+      setIsSauceChecked((prevIsSauceChecked) => !prevIsSauceChecked);
       const newSelectedSauce = selectedSauce === pizza.sauce ? '' : pizza.sauce;
       dispatch(updateSelectedSauce(newSelectedSauce));
     };

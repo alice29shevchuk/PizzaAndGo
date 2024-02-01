@@ -13,7 +13,7 @@ export const Department = ({ onSelectDepartment }) => {
       try {
         const response = await axios.get(`http://alisa000077-001-site1.htempurl.com/api/Department/GetDepartmentByID?id=${selectedCityId}`); 
         setDepartment(response.data);
-        // console.log(response.data);
+        dispatch(selectDepartment(response.data[0].id));
         dispatch(setDepartments(response.data));
         setLoading(false);
       } catch (error) {

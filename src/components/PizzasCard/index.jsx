@@ -24,7 +24,10 @@ function PizzaCard({id,title,price,imageUrl,weight,types}){
             />
         <h4 className="pizza-block__title">{title}</h4>
         <div className="pizza-block__bottom">
+          <div>
+          <p className="pizzasWeight">{weight} г</p>
           <div className="pizza-block__price">{price} грн</div>
+          </div>
           <Link to={`/pizza/${id}`}>
           <button className="button button--outline button--add">
             <svg

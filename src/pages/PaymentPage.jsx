@@ -32,7 +32,7 @@ export const PaymentPage = () => {
   const [selectedDepartmentName, setSelectedDepartmentName] = React.useState("");
   const {cities,selectedCityId} = useSelector((state) => state.city);
   const {departments,selectedDepartment} = useSelector((state) => state.department);
-
+  const [selectedCity, setSelectedCity] = React.useState(false);
   //
   //time
   //
@@ -42,7 +42,7 @@ export const PaymentPage = () => {
   function getDefaultTime() {
     const now = new Date();
     now.setMinutes(now.getMinutes() + 10);
-    return now.toTimeString().substring(0, 5);
+    return `${new Date().toISOString().substring(0, 10)} ${now.toTimeString().substring(0, 5)}`;
   }
   useEffect(() => {
     const now = new Date();
@@ -58,7 +58,7 @@ export const PaymentPage = () => {
 
   const handleTimeChange = (e) => {
     setCurrentTime(e.target.value);
-    setOrderTime(e.target.value);
+    setOrderTime(`${new Date().toISOString().substring(0, 10)} ${e.target.value}`);
   };
   //
   //
@@ -70,14 +70,14 @@ export const PaymentPage = () => {
     setPaymentMethod(savedOrder.paymentMethod || 'cash');
     setIsPhoneValid(savedOrder.phoneNumber && savedOrder.phoneNumber.length === 12);
     setOrderTime(savedOrder.orderData || getDefaultTime());
-    setModalIsOpen(false);
+    // setModalIsOpen(false);
   }, []);
   useEffect(() => {
     const savedCity = localStorage.getItem('selectedCity');
     const savedDepartment = localStorage.getItem('selectedDepartment');
-    setSelectedCityName(savedCity || ""); // Use a default value if not found
+    setSelectedCityName(savedCity || ""); 
     setSelectedDepartmentName(savedDepartment || "");
-    setModalIsOpen(false);
+    // setModalIsOpen(false);
   }, []);
   useEffect(() => {
     const order = {
@@ -98,13 +98,13 @@ export const PaymentPage = () => {
       totalPrice,
       comment:comment,
       paymentMethod:paymentMethod,
-      orderData:orderTime,
+      orderData: orderTime,
       city: selectedCityName,
       department:selectedDepartmentName,
     };
     dispatch(setOrder(order));
     sessionStorage.setItem('order',JSON.stringify(order));///////////////////////////////////
-  }, [phone, comment, items, totalPrice, dispatch, name, email,paymentMethod,orderTime,selectedCityName,selectedDepartmentName,modalIsOpen]);
+  }, [phone, comment, items, totalPrice, dispatch, name, email,paymentMethod,orderTime,selectedCityName,selectedDepartmentName]);
   useEffect(() => {
     const generatedOrderNumber = uuidv4();
     setOrderNumber(generatedOrderNumber);
@@ -129,7 +129,7 @@ export const PaymentPage = () => {
     navigate('/order');
   };
   const handlePayment = () => {
-    if(!modalIsOpen){
+    if(!selectedCity){
       alert('Выберите город!');
     }else{
       navigate('/order');
@@ -287,13 +287,16 @@ export const PaymentPage = () => {
                       const selectedCity = cities.find((city) => city.id === selectedCityId);
                       const cityName = selectedCity ? selectedCity.name : "Unknown city";
                       setSelectedCityName(cityName);
+                      
                       const selectedDep = departments.find((department) => department.id === selectedDepartment);
                       console.log(selectedDep);
                       const departmentName = selectedDep ? selectedDep.name : "Unknown department";
                       setSelectedDepartmentName(departmentName);
+
                       localStorage.setItem('selectedCity', cityName);
                       localStorage.setItem('selectedDepartment', departmentName);
-                      setModalIsOpen(false);
+                      setSelectedCity(true);
+                      // setModalIsOpen(false);
             }} />
         <h4>Комментарий к заказу</h4>
         <textarea value={comment} onChange={(e) => setComment(e.target.value)} maxLength={100} className="payment-input-comment"/>
