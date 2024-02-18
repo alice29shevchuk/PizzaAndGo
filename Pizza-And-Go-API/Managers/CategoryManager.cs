@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Net;
+using Microsoft.AspNetCore.Mvc;
 using Pizza_And_Go_API.Models;
 
 namespace Pizza_And_Go_API.Managers
@@ -38,18 +40,26 @@ namespace Pizza_And_Go_API.Managers
             SaveChanges();
 		}
 
-		public void DeleteCategory(int idForDelete)
+		public HttpResponseMessage DeleteCategory(int idForDelete)
 		{
 			Category categoryForDelete = this.context.Categories.Where(x => x.Id.Equals(idForDelete)).First();
-            this.context.Categories.Remove(categoryForDelete);
-			SaveChanges();
-		}
+			List<Pizza> pizzas = this.context.Pizzas.Where(x => x.category.Equals(categoryForDelete.Id)).ToList();
+			if(pizzas.Count == 0)
+			{
+                this.context.Categories.Remove(categoryForDelete);
+                SaveChanges();
+                return new HttpResponseMessage(System.Net.HttpStatusCode.OK);
 
-		//
-		//	System
-		//
+            }
+            return new HttpResponseMessage(System.Net.HttpStatusCode.BadRequest);
 
-		private void UpdateData()
+        }
+
+        //
+        //	System
+        //
+
+        private void UpdateData()
 		{
             this.categories = this.context.Categories.ToList();
         }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net;
 using Microsoft.AspNetCore.Mvc;
 using Pizza_And_Go_API.Managers;
 using Pizza_And_Go_API.Models;
@@ -25,9 +26,9 @@ namespace Pizza_And_Go_API.Controllers.AdminControllers
 
         [HttpDelete]
         [Route("DeleteCategory")]
-        public void DeleteCategory(int idForDelete)
+        public HttpResponseMessage DeleteCategory(int idForDelete)
         {
-            this.manager.DeleteCategory(idForDelete);
+            return this.manager.DeleteCategory(idForDelete);
         }
 
         [HttpPost]

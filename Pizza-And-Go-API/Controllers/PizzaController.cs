@@ -17,6 +17,13 @@ namespace Pizza_And_Go_API.Controllers
 		}
 
 		[HttpGet]
+		[Route("GetPizzaByID")]
+		public Pizza GetPizzaByID(int idPizza)
+		{
+			return this.manager.GetPizzasByID(idPizza);
+		}
+
+        [HttpGet]
 		[Route("GetPizzas")]
 		public List<Pizza> GetPizzas()
 		{

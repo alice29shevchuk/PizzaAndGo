@@ -25,9 +25,9 @@ namespace Pizza_And_Go_API.Controllers.AdminControllers
 
         [HttpDelete]
         [Route("DeleteCity")]
-        public void DeleteCity(int idForDelete)
+        public HttpResponseMessage DeleteCity(int idForDelete)
         {
-            this.manager.DeleteCity(idForDelete);
+           return this.manager.DeleteCity(idForDelete);
         }
 
         [HttpPost]

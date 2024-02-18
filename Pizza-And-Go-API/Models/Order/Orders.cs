@@ -16,5 +16,6 @@ namespace Pizza_And_Go_API.Models.Order
 		public string orderData { get; set; }
 		public string city { get; set; }
 		public string department { get; set; }
+		public bool isDone { get; set; }
     }
 }

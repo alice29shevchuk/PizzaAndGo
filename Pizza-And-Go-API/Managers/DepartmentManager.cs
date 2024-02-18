@@ -23,6 +23,11 @@ namespace Pizza_And_Go_API.Managers
 		//	ADMIN
 		//
 
+		public List<Department> GetDepartments()
+		{
+			return this.context.Department.ToList();
+		}
+
 		public void AddDepartment(Department departmentForAdd)
 		{
 			this.context.Department.Add(departmentForAdd);

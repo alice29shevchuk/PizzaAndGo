@@ -16,6 +16,13 @@ namespace Pizza_And_Go_API.Controllers.AdminControllers
             this.manager = new DepartmentManager();
         }
 
+        [HttpGet]
+        [Route("GetAllDepartments")]
+        public List<Department> GetAllDepartments()
+        {
+            return this.manager.GetDepartments();
+        }
+
         [HttpPost]
         [Route("AddDepartment")]
         public void AddDepartment(Department departmentForAdd)

@@ -22,6 +22,6 @@ namespace Pizza_And_Go_API.Controllers
 		{
 			return this.manager.GetSouces();
 		}
-	}
+    }
 }
 

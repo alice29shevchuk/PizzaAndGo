@@ -26,7 +26,7 @@ namespace Pizza_And_Go_API.Managers
 
 		public void UpdateBeverage(Beverages beveragesForUpdate)
 		{
-			Beverages beverages = this.context.Beverages.Where(x => x.Id.Equals(beveragesForUpdate.Id)).First();
+			Beverages beverages = this.context.Beverages.Where(x => x.Id.Equals(beveragesForUpdate.Id)).FirstOrDefault();
 			if(beverages != null)
 			{
 				beverages.Name = beveragesForUpdate.Name;
@@ -39,7 +39,7 @@ namespace Pizza_And_Go_API.Managers
 
 		public void DeleteBeverage(int idForDelete)
 		{
-            Beverages beverages = this.context.Beverages.Where(x => x.Id.Equals(idForDelete)).First();
+            Beverages beverages = this.context.Beverages.Where(x => x.Id.Equals(idForDelete)).FirstOrDefault();
 			if(beverages != null)
 			{
 				this.context.Beverages.Remove(beverages);

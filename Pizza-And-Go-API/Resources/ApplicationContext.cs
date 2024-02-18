@@ -16,6 +16,7 @@ namespace Pizza_And_Go_API.Resources
         public DbSet<Department> Department { get; set; }
         public DbSet<Beverages> Beverages { get; set; }
         public DbSet<Souces> Souces { get; set; }
+        public DbSet<FeedBack> FeedBack { get; set; }
         //
         //  Order
         //
@@ -46,6 +47,7 @@ namespace Pizza_And_Go_API.Resources
             modelBuilder.Entity<ProductsInOrders>().HasKey(c => c.Id);
             modelBuilder.Entity<ExcludedIngredients>().HasKey(c => c.Id);
             modelBuilder.Entity<Orders>().HasKey(c => c.id);
+            modelBuilder.Entity<FeedBack>().HasKey(c => c.ID);
 
             base.OnModelCreating(modelBuilder);
         }

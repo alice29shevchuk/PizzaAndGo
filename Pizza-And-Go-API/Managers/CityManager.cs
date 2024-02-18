@@ -38,15 +38,21 @@ namespace Pizza_And_Go_API.Managers
 			}
 		}
 
-		public void DeleteCity(int idForDelete)
+		public HttpResponseMessage DeleteCity(int idForDelete)
 		{
 			City cityForDelete = this.context.City.Where(x => x.ID.Equals(idForDelete)).First();
+			List<Department> departments = this.context.Department.Where(x => x.IdCity.Equals(cityForDelete.ID)).ToList();
 			if(cityForDelete != null)
 			{
-				this.context.City.Remove(cityForDelete);
-				SaveChanges();
-			}
-		}
+				if(departments.Count == 0)
+				{
+                    this.context.City.Remove(cityForDelete);
+                    SaveChanges();
+                    return new HttpResponseMessage(System.Net.HttpStatusCode.OK);
+                }
+            }
+            return new HttpResponseMessage(System.Net.HttpStatusCode.BadRequest);
+        }
 	}
 }
 

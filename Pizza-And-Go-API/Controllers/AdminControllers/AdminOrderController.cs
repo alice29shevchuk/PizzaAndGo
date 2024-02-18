@@ -35,6 +35,14 @@ namespace Pizza_And_Go_API.Controllers.AdminControllers
 		{
 			this.manager.UpdateOreder(ordersForUpdate);
 		}
-	}
+
+		[HttpPost]
+		[Route("CheckTimeForOrder")]
+		public bool CheckTimeForOrder(string dateTime)
+		{
+			return this.manager.CheckTimeForOrder(dateTime);
+		}
+
+    }
 }
 
