@@ -14,7 +14,7 @@ import {Link, useNavigate} from 'react-router-dom';
 import Slider from '../components/Slider';
 import Footer from '../components/Footer';
 import { PopularProducts } from '../components/PopularProducts';
-import DrinksComponent from '../components/DrinksComponent';
+import ComboComponent from '../components/ComboComponent';
 import { Feedback } from '../components/Feedback';
 export const HomePage = () => {
   const images = [
@@ -153,6 +153,8 @@ export const HomePage = () => {
           <Slider images={images}></Slider>
           <h2 className="content__title">Популярные</h2>
           <PopularProducts></PopularProducts>
+          <h2 className="content__title">Вместе дешевле</h2>
+          <ComboComponent></ComboComponent>
           <h2 className="content__title">Меню</h2>
           <div className={notFound?'content__items-notFound':'content__items'}>
           {
