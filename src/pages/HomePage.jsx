@@ -14,6 +14,8 @@ import {Link, useNavigate} from 'react-router-dom';
 import Slider from '../components/Slider';
 import Footer from '../components/Footer';
 import { PopularProducts } from '../components/PopularProducts';
+import DrinksComponent from '../components/DrinksComponent';
+import { Feedback } from '../components/Feedback';
 export const HomePage = () => {
   const images = [
     {src: 'https://cdn.monopizza.com.ua/mp-ua/promotions/0001-kombo-dzhingl-bels-web-uk.png?alt=media&token=3eaed7f7-4afd-45d8-a326-aef97b66dce0}&w=1280&h=500&format=auto&mode=fit&q=60'},
@@ -103,9 +105,7 @@ export const HomePage = () => {
 
     React.useEffect(()=>{
         setIsLoading(true);
-        // axios.get('http://alisa000077-001-site1.htempurl.com/api/Pizza/GetPizzas')
         axios.get(`http://alisa000077-001-site1.htempurl.com/api/Pizza/Search?${selectedCategoryId>0? `idCategory=${selectedCategoryId}`:''}&sortBy=${selectedSortList.sortBy.replace('-','')}&order=${selectedSortList.sortBy.includes('-')?'desc':'asc'}${search}`)
-        //axios.get(`https://6589685a324d41715258e658.mockapi.io/pizzas?page=${currentPage}&${selectedCategoryId>0? `category=${selectedCategoryId}`:''}&sortBy=${selectedSortList.sortBy.replace('-','')}&order=${selectedSortList.sortBy.includes('-')?'desc':'asc'}${search}`)
         .then((response)=>{
           if (response.data.length==0) {
             throw new Error(`Network response was not ok: ${response.statusText}`);
@@ -160,13 +160,15 @@ export const HomePage = () => {
             ? [...new Array(pizzasPerPage)].map((_,index)=><Skeleton key={index}/>)
             : notFound
             ? <NotFoundCard />
-            :pizzas
-            .map((obj)=><PizzaCard key={obj.id} {...obj}/>)
+            :
+            pizzas.map((obj)=><PizzaCard key={obj.id} {...obj}/>)
           }
         </div>
         {!notFound && (
         <Pagination onChangePage={handlePageChange} pageCount={pageCount} selectedPage={selectedPageList}></Pagination>
         )}
+        <h2 className="content__title">Отзывы клиентов</h2>
+        <Feedback></Feedback>
     </div>
     <Footer></Footer>
     </>

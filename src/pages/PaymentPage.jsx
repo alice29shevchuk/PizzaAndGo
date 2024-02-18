@@ -54,6 +54,7 @@ export const PaymentPage = () => {
     }
 
     setTimeOptions(options);
+    console.log(options);
   }, []);
 
   const handleTimeChange = (e) => {
@@ -274,7 +275,8 @@ export const PaymentPage = () => {
               </label>
             </div>
         <br />
-        <select id="timePicker" name="timePicker" value={orderTime} onChange={handleTimeChange}>
+        {/* value={orderTime} ниже было */}
+        <select id="timePicker" name="timePicker" value={currentTime} onChange={handleTimeChange}> 
         {timeOptions.map((time, index) => (
           <option key={index} value={time}>
             {time}

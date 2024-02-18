@@ -140,8 +140,10 @@ export const UserProfile = () => {
           <p className="profile-info">
           <strong>Пароль:</strong> *******
           </p>
-          <button className="button" onClick={handleCurrentOrder}>Текущие заказы</button>
-          <button className="button" onClick={handleOrderHistory}>История заказов</button>
+          <div style={{display:'grid',justifyContent:'flex-start'}}>
+            <button style={{marginTop:20, marginBottom:20, backgroundColor:'#fe5f1e',border:'none',padding: 10,color:'white',cursor:'pointer'}} onClick={handleCurrentOrder}>Текущие заказы</button>
+            <button style={{marginBottom:-20, backgroundColor:'#fe5f1e',border:'none',padding: 10,color:'white',cursor:'pointer'}} onClick={handleOrderHistory}>История заказов</button>
+          </div>
         </div>
   
         <div className="buttons-container">

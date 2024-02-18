@@ -1,0 +1,78 @@
+@import '../variables';
+.modalReview {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .modal-content-review {
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); 
+    max-width: 400px;
+    width: 100%;
+  }
+  
+  textarea{
+    width: 360px;
+    margin-top: 5px;
+    margin-bottom: -5px;
+    padding: 5px;
+    resize: none; 
+  }
+  h2 {
+    font-size: 24px;
+    margin-bottom: 20px;
+  }
+  
+  p {
+    margin-bottom: 10px;
+  }
+  .buttons-send{
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+  }
+  .buttons-send .send-button {
+    padding: 10px 20px;
+    background-color: $orange; 
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .buttons-send .send-button:hover {
+    background-color: lighten($orange, 10%);
+  }
+  
+  .buttons-send .send-button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+  }
+
+  .buttons-send .close-button {
+    padding: 10px 20px;
+    background-color: red; 
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .buttons-send .close-button:hover {
+    background-color: darken(red, 10%);
+  }
+  
+  .buttons-send .close-button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+  }
+  

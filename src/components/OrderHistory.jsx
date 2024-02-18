@@ -2,12 +2,21 @@ import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import axios from 'axios';
 import Footer from './Footer';
+import ModalReview from './ModalReview';
 const OrderHistory = () => {
   const dispatch = useDispatch();
   const iduser = JSON.parse(sessionStorage.getItem('user')).uid;
   const [currentOrderData, setCurrentOrderData] = React.useState(null);
   const [loading, setLoading] = React.useState(true);
+  const [isModalOpen, setIsModalOpen] = React.useState(false);
 
+  const openModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
   useEffect(() => {
     const fetchOrderHistory = async () => {
       try {
@@ -55,12 +64,16 @@ const OrderHistory = () => {
             {product.excludedIngredients.length > 0 && (
                 <p className="product-detail">{product.excludedIngredients.map(ingredient => ingredient.title).join(', ')}</p>
             )}
-            <p className="product-detail">Соус: {product.selectedSauce}</p>
+            {product.selectedSauce!="" && <p className="product-detail">Соус: {product.selectedSauce}</p>}
             <p className="product-price">Цена: {product.price} грн</p>
           </div>
         ))}
         <p><strong>Готовность: </strong>{orderItem.isDone===false ? 'Заказ в обработке':'Заказ готов'}</p>
-        <p><strong>Итоговая сумма к оплате: </strong>{orderItem.paymentMethod === 'cash' ? `${orderItem.totalPrice} грн `: `Оплачено картой ${orderItem.totalPrice} грн`}</p>
+        <div style={{display:'flex',justifyContent:'space-between'}}>
+          <p><strong>Итоговая сумма к оплате: </strong>{orderItem.paymentMethod === 'cash' ? `${orderItem.totalPrice} грн `: `Оплачено картой ${orderItem.totalPrice} грн`}</p>
+          <button className='button' onClick={openModal}>Оставить отзыв</button>
+          {isModalOpen && <ModalReview onClose={closeModal} />}
+        </div>
       </div>
     ))}
     </>
